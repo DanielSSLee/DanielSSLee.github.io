@@ -1,1 +1,1 @@
-Webpage for an assignment in AP Computer Science Principles
+Complete Rehaul of my Highschool AP Computer Science Project into fully functional website about me
