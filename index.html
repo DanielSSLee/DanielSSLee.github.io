@@ -1,16 +1,78 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Sik Website</title>
-	<link rel="stylesheet" href="./style.css">
+    <meta name="description" content="A minimal personal website." />
+    <link rel="stylesheet" href="styles.css" />
+    <script defer src="script.js"></script>
   </head>
-  <body>
-  <style>
-h1 {text-align: center;}
 
-</style>
-    <h1>Hamburger</h1>
-	<br>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="index.html" aria-label="Go to home">
+          <span class="brand-dot" aria-hidden="true"></span>
+          <span>Daniel Lee</span>
+        </a>
+
+        <nav class="nav" aria-label="Primary">
+          <a class="nav-link" aria-current="page" href="index.html">Home</a>
+          <a class="nav-link" href="about.html">About</a>
+          <a class="nav-link" href="projects.html">Projects</a>
+          <a class="nav-link" href="contact.html">Contact</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main" class="container">
+      <section class="hero">
+        <p class="eyebrow">Hello, I’m</p>
+        <h1 class="title">Daniel Lee.</h1>
+        <p class="subtitle">
+          Majoring Computer Engineering @ Texas A&M University. Hope you enjoy my website!
+        </p>
+
+        <div class="hero-actions">
+          <a class="button" href="about.html">Read more</a>
+          <a class="button button-ghost" href="projects.html">See projects</a>
+        </div>
+      </section>
+
+      <section class="grid">
+        <article class="card">
+          <h2>Now</h2>
+          <p>
+            Finish last semester.
+          </p>
+        </article>
+
+        <article class="card">
+          <h2>Highlights</h2>
+          <p>
+            It is my last semester.
+          </p>
+        </article>
+
+        <article class="card">
+          <h2>Writing</h2>
+          <p>
+            A spot for posts or reflections. You can add a blog page later.
+          </p>
+        </article>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <p class="muted">© <span id="year"></span> Daniel Lee</p>
+        <p class="muted">
+          Built with plain HTML/CSS/JS.
+        </p>
+      </div>
+    </footer>
   </body>
 </html>
