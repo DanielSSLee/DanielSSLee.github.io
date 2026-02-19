@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Daniel Lee — Projects</title>
+    <meta name="description" content="Projects by Daniel Lee." />
+    <link rel="stylesheet" href="styles.css" />
+    <script defer src="script.js"></script>
+  </head>
+
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="index.html" aria-label="Go to home">
+          <span class="brand-dot" aria-hidden="true"></span>
+          <span>Daniel Lee</span>
+        </a>
+
+        <nav class="nav" aria-label="Primary">
+          <a class="nav-link" href="index.html">Home</a>
+          <a class="nav-link" href="about.html">About</a>
+          <a class="nav-link" aria-current="page" href="projects.html">Projects</a>
+          <a class="nav-link" href="contact.html">Contact</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main" class="container">
+      <section class="hero">
+        <p class="eyebrow">Projects</p>
+        <h1 class="title">Things I’ve built.</h1>
+        <p class="subtitle">
+          A curated list of work—each project includes a quick description and a link to the code.
+        </p>
+      </section>
+
+      <section class="projects" aria-label="Project list">
+        <!-- Project 1 (image left, text right) -->
+        <article class="project">
+          <div class="project-media">
+            <!-- Replace with your image. Keep width/height to reduce layout shift. -->
+            <img
+              src="images/project-1.png"
+              alt="Screenshot of Project One"
+              width="1200"
+              height="750"
+              loading="lazy"
+            />
+          </div>
+
+          <div class="project-body">
+            <h2 class="project-title">
+              <a class="project-link" href="https://github.com/yourname/project-one" target="_blank" rel="noreferrer">
+                Project One
+              </a>
+            </h2>
+
+            <p class="project-desc">
+              Work in progress
+            </p>
+
+            <!--
+            <ul class="project-meta">
+              <li><strong>Stack:</strong> TypeScript, React, PostgreSQL</li>
+              <li><strong>Highlights:</strong> OAuth, dashboards, exports</li>
+              <li><strong>Status:</strong> In progress</li>
+            </ul>
+
+            <div class="project-actions">
+              <a class="button button-ghost" href="https://github.com/yourname/project-one" target="_blank" rel="noreferrer">
+                View on GitHub
+              </a>
+            </div>
+          -->
+          </div>
+        </article>
+
+        <!-- Project 2 (auto alternates: text left, image right) -->
+        <article class="project">
+          <div class="project-media">
+            <img
+              src="images/project-2.png"
+              alt="Screenshot of Project Two"
+              width="1200"
+              height="750"
+              loading="lazy"
+            />
+          </div>
+
+          <div class="project-body">
+            <h2 class="project-title">
+              <a class="project-link" href="https://github.com/yourname/project-two" target="_blank" rel="noreferrer">
+                Project Two
+              </a>
+            </h2>
+
+            <p class="project-desc">
+              Work in progress
+            </p>
+<!--
+            <ul class="project-meta">
+              <li><strong>Stack:</strong> Python, Pandas, Excel</li>
+              <li><strong>Highlights:</strong> Automation, formatting, reports</li>
+              <li><strong>Status:</strong> Shipped</li>
+            </ul>
+
+            <div class="project-actions">
+              <a class="button button-ghost" href="https://github.com/yourname/project-two" target="_blank" rel="noreferrer">
+                View on GitHub
+              </a>
+            </div>
+          -->
+          </div>
+        </article>
+
+        <!-- Add more <article class="project"> blocks and it will keep alternating -->
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <p class="muted">© <span id="year"></span> Your Name</p>
+        <p class="muted">Built with plain HTML/CSS/JS.</p>
+      </div>
+    </footer>
+  </body>
+</html>
