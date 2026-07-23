@@ -3,76 +3,101 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Sik Website</title>
-    <meta name="description" content="A minimal personal website." />
+    <title>Daniel Lee — Software Engineer & Computer Engineering @ Texas A&M</title>
+    <meta name="description" content="Interactive PowerShell Portfolio for Daniel Lee. Software Engineering, Computer Engineering @ Texas A&M, C++ Rendering, LiDAR, and Web Service Backends." />
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css" />
     <script defer src="script.js"></script>
   </head>
 
-  <body>
-    <a class="skip-link" href="#main">Skip to content</a>
+  <body class="theme-powershell">
+    <!-- Scanlines CRT Effect Overlay -->
+    <div class="crt-overlay" aria-hidden="true"></div>
+    <div class="scanline" aria-hidden="true"></div>
 
-    <header class="site-header">
-      <div class="container header-inner">
-        <a class="brand" href="index.html" aria-label="Go to home">
-          <span class="brand-dot" aria-hidden="true"></span>
-          <span>Seung Sik Lee</span>
-        </a>
+    <div class="app-container">
+      <!-- MAIN TERMINAL WINDOW - FULLSCREEN -->
+      <main class="terminal-window" id="terminal-window" tabindex="0" role="region" aria-label="PowerShell Interactive Console">
+        
+        <!-- WINDOW TITLEBAR -->
+        <header class="terminal-titlebar">
+          <div class="titlebar-left">
+            <div class="terminal-icon" aria-hidden="true">PS</div>
+            <span class="titlebar-text" id="window-title">Windows PowerShell — Daniel Lee [C:\Users\DanielLee]</span>
+          </div>
+          
+          <div class="titlebar-controls">
+            <!-- Theme Quick Select -->
+            <div class="theme-picker-container">
+              <label for="theme-select" class="sr-only">Choose Terminal Theme</label>
+              <select id="theme-select" class="theme-select" aria-label="Select Theme">
+                <option value="powershell">Theme: PowerShell Blue</option>
+                <option value="matrix">Theme: Matrix Green</option>
+                <option value="amber">Theme: Amber CRT</option>
+                <option value="cyberpunk">Theme: Cyberpunk Neon</option>
+                <option value="dark">Theme: Modern Dark</option>
+              </select>
+            </div>
+            
+            <button class="win-btn crt-toggle-btn" id="crt-toggle" title="Toggle CRT Scanline Overlay">
+              CRT: ON
+            </button>
+            <button class="win-btn" id="btn-min" title="Minimize" aria-label="Minimize Window">_</button>
+            <button class="win-btn" id="btn-max" title="Maximize" aria-label="Maximize Window">□</button>
+            <button class="win-btn btn-close" id="btn-close" title="Close Window">✕</button>
+          </div>
+        </header>
 
-        <nav class="nav" aria-label="Primary">
-          <a class="nav-link" aria-current="page" href="index.html">Home</a>
-          <a class="nav-link" href="about.html">About</a>
-          <a class="nav-link" href="projects.html">Projects</a>
-          <a class="nav-link" href="contact.html">Contact</a>
+        <!-- TOP QUICK SHORTCUT BAR (Retro Bracket Buttons) -->
+        <nav class="quick-nav-bar" aria-label="Quick Terminal Commands">
+          <span class="nav-label">COMMANDS:</span>
+          <button class="quick-cmd-btn" data-cmd="help">[ help ]</button>
+          <button class="quick-cmd-btn" data-cmd="ls">[ ls ]</button>
+          <button class="quick-cmd-btn" data-cmd="cd pages/about.html">[ about ]</button>
+          <button class="quick-cmd-btn" data-cmd="cd pages/projects.html">[ projects ]</button>
+          <button class="quick-cmd-btn" data-cmd="cd pages/contact.html">[ contact ]</button>
+          <button class="quick-cmd-btn" data-cmd="cat bio.txt">[ cat bio.txt ]</button>
+          <button class="quick-cmd-btn" data-cmd="ascii avatar">[ ascii avatar ]</button>
+          <button class="quick-cmd-btn" data-cmd="clear">[ clear ]</button>
         </nav>
-      </div>
-    </header>
 
-    <main id="main" class="container">
-      <section class="hero">
-        <p class="eyebrow">Hello, I’m</p>
-        <h1 class="title">Daniel Lee.</h1>
-        <p class="subtitle">
-          Majoring Computer Engineering @ Texas A&M University. Hope you enjoy my website!
-        </p>
+        <!-- TERMINAL SCREEN / OUTPUT LOG -->
+        <div class="terminal-body" id="terminal-body">
+          <div id="terminal-output" class="terminal-output" aria-live="polite">
+            <!-- Initial prominent header & dashboard populated by JS engine -->
+          </div>
 
-        <div class="hero-actions">
-          <a class="button" href="about.html">Read more</a>
-          <a class="button button-ghost" href="projects.html">See projects</a>
+          <!-- ACTIVE PROMPT INPUT LINE (HIGH VISIBILITY) -->
+          <div class="terminal-input-row" id="input-row">
+            <span class="prompt-string" id="prompt-string">PS C:\Users\DanielLee&gt;</span>
+            <div class="input-wrapper">
+              <input 
+                type="text" 
+                id="cmd-input" 
+                class="cmd-input" 
+                autocomplete="off" 
+                autocorrect="off" 
+                autocapitalize="off" 
+                spellcheck="false" 
+                aria-label="Terminal Command Input"
+                placeholder="⚡ TYPE A COMMAND HERE (e.g. 'help', 'cd pages/projects.html', 'ls')..." 
+              />
+            </div>
+          </div>
         </div>
-      </section>
 
-      <section class="grid">
-        <article class="card">
-          <h2>Now</h2>
-          <p>
-            Finish last semester.
-          </p>
-        </article>
+        <!-- STATUS BAR -->
+        <footer class="terminal-statusbar">
+          <div class="status-item"><span class="status-label">PWD:</span> <span id="status-pwd">C:\Users\DanielLee</span></div>
+          <div class="status-item"><span class="status-label">Items:</span> <span id="status-items">7 items</span></div>
+          <div class="status-item mobile-hide"><span class="status-label">CLI Controls:</span> <kbd>Tab</kbd> Autocomplete | <kbd>↑</kbd>/<kbd>↓</kbd> History</div>
+          <div class="status-item"><span class="status-label">Status:</span> <span class="status-value">Active Terminal Shell</span></div>
+        </footer>
 
-        <article class="card">
-          <h2>Highlights</h2>
-          <p>
-            It is my last semester.
-          </p>
-        </article>
-
-        <article class="card">
-          <h2>Writing</h2>
-          <p>
-            A spot for posts or reflections. You can add a blog page later.
-          </p>
-        </article>
-      </section>
-    </main>
-
-    <footer class="site-footer">
-      <div class="container footer-inner">
-        <p class="muted">© <span id="year"></span> Daniel Lee</p>
-        <p class="muted">
-          Built with plain HTML/CSS/JS.
-        </p>
-      </div>
-    </footer>
+      </main>
+    </div>
   </body>
 </html>
