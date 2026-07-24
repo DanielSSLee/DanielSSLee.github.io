@@ -182,6 +182,15 @@ Repository: https://github.com/danielsslee`
 ------------------------------------------------
 Stack: C/C++, Microcontroller, ToF LiDAR, Serial UART
 Description: Hardware-software system that acquires distance point clouds via ToF LiDAR sensor and streams spatial coordinates over UART to generate 3D point cloud maps.`
+                    },
+                    'kitkatch-game.txt': {
+                      type: 'file',
+                      size: '1.5 KB',
+                      content: `PROJECT: KitKatch (Indie Game on itch.io)
+------------------------------------------------
+Playable Link: https://kitkatch.itch.io/kitkatch
+Tags: Game Development, Game Design, Itch.io
+Description: Interactive indie game published on itch.io featuring custom gameplay mechanics, fluid movement systems, and engaging level design.`
                     }
                   }
                 }
@@ -744,9 +753,11 @@ C:\\Users\\DanielLee
   });
 
   // Focus input when clicking anywhere inside terminal body
-  terminalBody.addEventListener('click', () => {
-    cmdInput.focus();
-  });
+  if (terminalBody && cmdInput) {
+    terminalBody.addEventListener('click', () => {
+      cmdInput.focus();
+    });
+  }
 
   // Quick Command Bar Buttons
   document.querySelectorAll('.quick-cmd-btn').forEach(btn => {
@@ -759,35 +770,152 @@ C:\\Users\\DanielLee
   });
 
   // Theme Select Dropdown
-  themeSelect.addEventListener('change', (e) => {
-    changeTheme(e.target.value);
-  });
+  if (themeSelect) {
+    themeSelect.addEventListener('change', (e) => {
+      changeTheme(e.target.value);
+    });
+  }
 
   // CRT Scanline Toggle
-  crtToggle.addEventListener('click', () => {
-    document.body.classList.toggle('crt-disabled');
-    const isDisabled = document.body.classList.contains('crt-disabled');
-    crtToggle.textContent = `CRT: ${isDisabled ? 'OFF' : 'ON'}`;
+  if (crtToggle) {
+    crtToggle.addEventListener('click', () => {
+      document.body.classList.toggle('crt-disabled');
+      const isDisabled = document.body.classList.contains('crt-disabled');
+      crtToggle.textContent = `CRT: ${isDisabled ? 'OFF' : 'ON'}`;
+    });
+  }
+
+  // ==========================================================================
+  // REAL INTERACTIVE WINDOW CONTROLS (MINIMIZE, MAXIMIZE, CLOSE)
+  // ==========================================================================
+
+  // 1. MINIMIZE HANDLER
+  function minimizeTerminal() {
+    if (document.getElementById('minimized-overlay')) return;
+
+    const overlay = document.createElement('div');
+    overlay.id = 'minimized-overlay';
+    overlay.className = 'minimized-overlay';
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-label', 'PowerShell Minimized State');
+    overlay.innerHTML = `
+      <div class="minimized-box">
+        <div class="minimized-icon">🗕</div>
+        <h2>Windows PowerShell is Minimized</h2>
+        <span class="minimized-hint">[ Click anywhere on screen to restore shell ]</span>
+      </div>
+    `;
+
+    document.body.appendChild(overlay);
+
+    const restoreHandler = (e) => {
+      e.stopPropagation();
+      if (document.body.contains(overlay)) {
+        overlay.remove();
+      }
+      document.removeEventListener('click', restoreHandler, true);
+      if (cmdInput) cmdInput.focus();
+    };
+
+    setTimeout(() => {
+      document.addEventListener('click', restoreHandler, true);
+    }, 10);
+  }
+
+  // 2. MAXIMIZE / FULLSCREEN HANDLER
+  function toggleMaximize() {
+    const isFullscreen = !!document.fullscreenElement || !!document.webkitFullscreenElement;
+
+    if (!isFullscreen) {
+      const docEl = document.documentElement;
+      if (docEl.requestFullscreen) {
+        docEl.requestFullscreen().catch(() => {
+          document.body.classList.toggle('maximized-mode');
+        });
+      } else if (docEl.webkitRequestFullscreen) {
+        docEl.webkitRequestFullscreen();
+      } else {
+        document.body.classList.toggle('maximized-mode');
+      }
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen().catch(() => {});
+      } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+      }
+      document.body.classList.remove('maximized-mode');
+    }
+  }
+
+  // Update button visual state on fullscreenchange
+  document.addEventListener('fullscreenchange', () => {
+    const isFS = !!document.fullscreenElement;
+    const maxBtns = document.querySelectorAll('#btn-max, .btn.maximize');
+    maxBtns.forEach(btn => {
+      btn.setAttribute('title', isFS ? 'Restore Down' : 'Maximize');
+      btn.textContent = isFS ? '❐' : '□';
+    });
   });
 
-  // Window Controls Simulators
-  if (btnMin) {
-    btnMin.addEventListener('click', () => {
-      appendOutput('[Terminal Minimized. Click anywhere to restore.]', false);
-    });
+  // 3. CLOSE HANDLER
+  function closeTerminalTab() {
+    // Attempt standard browser tab close
+    window.close();
+
+    // Fallback UI if browser restricts window.close()
+    setTimeout(() => {
+      if (document.getElementById('closed-overlay')) return;
+
+      const closedOverlay = document.createElement('div');
+      closedOverlay.id = 'closed-overlay';
+      closedOverlay.className = 'closed-overlay';
+      closedOverlay.setAttribute('role', 'dialog');
+      closedOverlay.setAttribute('aria-label', 'Terminal Session Closed');
+      closedOverlay.innerHTML = `
+        <div class="closed-box">
+          <div class="closed-header">
+            <span>✕</span> Windows PowerShell — Session Closed
+          </div>
+          <p class="closed-msg">Process exited with code 0. Tab session terminated.</p>
+          <p class="closed-subtext">(Press <kbd>Ctrl+W</kbd> / <kbd>Cmd+W</kbd> to close tab, or click below to restart)</p>
+          <button id="btn-restart-session" class="btn-restart-session">⚡ Restart PowerShell Session</button>
+        </div>
+      `;
+
+      document.body.appendChild(closedOverlay);
+
+      const restartBtn = closedOverlay.querySelector('#btn-restart-session');
+      if (restartBtn) {
+        restartBtn.addEventListener('click', () => {
+          closedOverlay.remove();
+          if (cmdInput) cmdInput.focus();
+        });
+      }
+    }, 100);
   }
 
-  if (btnMax) {
-    btnMax.addEventListener('click', () => {
-      terminalWindow.classList.toggle('maximized');
+  // Attach Listeners to IDs and Class Selectors
+  document.querySelectorAll('#btn-min, .btn.minimize').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      minimizeTerminal();
     });
-  }
+  });
 
-  if (btnClose) {
-    btnClose.addEventListener('click', () => {
-      appendOutput('[Terminal Session Terminated. Refresh page to restart shell.]', false);
+  document.querySelectorAll('#btn-max, .btn.maximize').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      toggleMaximize();
     });
-  }
+  });
+
+  document.querySelectorAll('#btn-close, .btn.close').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      closeTerminalTab();
+    });
+  });
+
 
   // Initial Welcome Load Sequence with PROMINENT RECRUITER DASHBOARD
   function initTerminal() {
@@ -820,6 +948,7 @@ C:\\Users\\DanielLee
     <h3>🚀 Featured Work</h3>
     <ul class="dash-list font-mono">
       <li>• <span class="file-item html-file" data-action="cd pages/projects.html">CMMS System (US Modules)</span></li>
+      <li>• <a href="https://kitkatch.itch.io/kitkatch" target="_blank" rel="noreferrer" style="color: var(--accent-color); text-decoration: none;">🎮 KitKatch (Itch.io Game)</a></li>
       <li>• <span class="file-item html-file" data-action="cd pages/projects.html">C++ Raytracer &amp; 3D Engine</span></li>
       <li>• <span class="file-item html-file" data-action="cd pages/projects.html">LiDAR 3D Spatial Scanner</span></li>
     </ul>
