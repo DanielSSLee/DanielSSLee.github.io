@@ -118,8 +118,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!win) return;
     win.classList.remove('closed');
     win.classList.remove('minimized');
-    // PowerShell terminal always opens maximised so all content is comfortably visible
-    if (winId === 'win-terminal') {
+    // PowerShell terminal and Muhan Maesu trading app open maximized so all content is comfortably visible
+    if (winId === 'win-terminal' || winId === 'win-muhan-maesu') {
       win.classList.add('maximized');
     }
     bringToFront(win);
