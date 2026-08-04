@@ -1,79 +1,128 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Daniel Lee — Home (PS C:\Users\DanielLee\pages\home.html)</title>
-    <meta name="description" content="Home Page - Daniel Lee Terminal Portfolio" />
-    <link rel="stylesheet" href="../styles.css" />
-    <script defer src="../script.js"></script>
-  </head>
-  <body class="powershell-theme terminal-page">
-    <div class="terminal-window page-mode">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Daniel Lee — PowerShell Terminal (PS C:\Users\DanielLee)</title>
+  <meta name="description" content="Interactive PowerShell CLI Terminal Portfolio — Daniel Lee, B.S. Computer Engineering @ Texas A&M" />
+  <link rel="stylesheet" href="terminal.css" />
+  <script defer src="terminal.js"></script>
+  <!-- Iframe mode: hide duplicate chrome when embedded in DanielOS desktop -->
+  <script>
+    if (window !== window.top) {
+      document.addEventListener('DOMContentLoaded', () => {
+        // Hide the inner titlebar (DanielOS already has one)
+        const tb = document.querySelector('.terminal-titlebar');
+        if (tb) tb.style.display = 'none';
+        // Hide CRT overlays (they'd be clipped by the window frame anyway)
+        document.querySelectorAll('.crt-overlay, .scanline').forEach(el => el.style.display = 'none');
+        // Remove the .app-container padding so the terminal fills the frame edge-to-edge
+        const app = document.querySelector('.app-container');
+        if (app) { app.style.padding = '0'; app.style.minHeight = '100vh'; }
+        const tw = document.querySelector('.terminal-window');
+        if (tw) { tw.style.height = '100vh'; tw.style.borderRadius = '0'; tw.style.border = 'none'; }
+      });
+    }
+  </script>
+</head>
+
+<body>
+  <!-- CRT scanlines overlay -->
+  <div class="crt-overlay"></div>
+  <div class="scanline"></div>
+
+  <div class="app-container">
+    <div class="terminal-window" id="terminal-window">
+
+      <!-- ── TITLEBAR ── -->
       <div class="terminal-titlebar">
         <div class="titlebar-left">
           <div class="terminal-icon" aria-hidden="true">PS</div>
-          <span class="titlebar-text">Windows PowerShell — page: pages/home.html</span>
+          <span id="window-title">Windows PowerShell — Daniel Lee [C:\Users\DanielLee]</span>
         </div>
         <div class="titlebar-controls">
-          <button class="win-btn" id="btn-min" title="Minimize" aria-label="Minimize Window">_</button>
-          <button class="win-btn" id="btn-max" title="Maximize" aria-label="Maximize Window">□</button>
-          <button class="win-btn btn-close" id="btn-close" title="Close Window">✕</button>
+          <!-- Theme picker -->
+          <div class="theme-picker-container">
+            <select class="theme-select" id="theme-select" title="Switch terminal theme" aria-label="Terminal Theme">
+              <option value="powershell" selected>🔵 PowerShell</option>
+              <option value="matrix">🟢 Matrix</option>
+              <option value="amber">🟠 Amber CRT</option>
+              <option value="cyberpunk">🟣 Cyberpunk</option>
+              <option value="dark">⚫ Dark</option>
+            </select>
+          </div>
+          <!-- CRT toggle -->
+          <button class="win-btn crt-toggle-btn" id="crt-toggle" title="Toggle CRT scanlines" aria-label="Toggle CRT Effect">CRT: ON</button>
+          <!-- Window controls -->
+          <button class="win-btn" id="btn-min" title="Minimize" aria-label="Minimize">_</button>
+          <button class="win-btn" id="btn-max" title="Maximize" aria-label="Maximize">□</button>
+          <button class="win-btn btn-close" id="btn-close" title="Close" aria-label="Close">✕</button>
         </div>
       </div>
-      <main class="terminal-body">
-        <header class="terminal-header">
-          <pre class="ascii-art logo-art">
- _____   ___  _   _ _____ _____ _     _     _____ _____ 
-|  _  | / _ \| \ | |_   _|  ___| |   | |   |  ___|  ___|
-| | | |/ /_\ \ \| | | | | |__ | |   | |   | |__ | |__  
-| | | ||  _  | .` | | | |  __|| |___| |___|  __||  __| 
-\ \_/ /| | | | |\ \_| |_| |___| |___| |___| |___| |___ 
- \___/ \_| |_/\_| \_/\___/\____/_____/_____/____/\____/ 
-          </pre>
-          <div class="prompt-line"><span class="prompt-path">PS C:\Users\DanielLee\pages></span> <span class="cmd-text">cat home.html</span></div>
-        </header>
 
-        <section class="file-content-view">
-          <h1 class="page-title">[WELCOME TO DANIEL LEE'S TERMINAL]</h1>
-          <p class="eyebrow">// B.S. Computer Engineering (Math Minor) @ Texas A&amp;M | Engineering Technician Intern @ US Modules</p>
-          
-          <div class="terminal-card full-width">
-            <h2>&gt; Overview</h2>
-            <p>Welcome! This site is designed as an interactive CLI shell environment inspired by Windows PowerShell.</p>
-            <p>Navigate through directories using standard terminal commands: <code>cd pages</code>, <code>ls</code>, <code>cat bio.txt</code>, <code>ascii avatar</code>, <code>theme matrix</code>, or <code>help</code>.</p>
+      <!-- ── QUICK NAV BAR ── -->
+      <div class="quick-nav-bar" role="toolbar" aria-label="Quick Commands">
+        <span class="nav-label">Quick&gt;</span>
+        <button class="quick-cmd-btn" data-cmd="help"                      title="help">[  help  ]</button>
+        <button class="quick-cmd-btn" data-cmd="ls"                         title="ls">[  ls  ]</button>
+        <button class="quick-cmd-btn" data-cmd="cd pages"                   title="cd pages">[ cd pages ]</button>
+        <button class="quick-cmd-btn" data-cmd="cat bio.txt"                title="cat bio.txt">[ cat bio.txt ]</button>
+        <button class="quick-cmd-btn" data-cmd="open about.html"            title="about">[ about.html ]</button>
+        <button class="quick-cmd-btn" data-cmd="open projects.html"         title="projects">[ projects.html ]</button>
+        <button class="quick-cmd-btn" data-cmd="open contact.html"          title="contact">[ contact.html ]</button>
+        <button class="quick-cmd-btn" data-cmd="ascii avatar"               title="avatar">[ ascii avatar ]</button>
+        <button class="quick-cmd-btn" data-cmd="theme matrix"               title="matrix theme">[ matrix ]</button>
+        <button class="quick-cmd-btn" data-cmd="tree"                       title="tree">[ tree ]</button>
+        <button class="quick-cmd-btn" data-cmd="clear"                      title="clear">[ cls ]</button>
+        <button class="quick-cmd-btn" data-cmd="cd .."                      title="go back" class="mobile-hide">[ cd .. ]</button>
+      </div>
+
+      <!-- ── TERMINAL BODY ── -->
+      <main class="terminal-body" id="terminal-body">
+
+        <!-- Interactive terminal output log — JS boots into this -->
+        <div class="terminal-output" id="terminal-output"></div>
+
+        <!-- Input row -->
+        <div class="terminal-input-row">
+          <div class="input-wrapper">
+            <span class="prompt-string" id="prompt-string">PS C:\Users\DanielLee&gt;</span>&nbsp;
+            <input
+              type="text"
+              id="cmd-input"
+              class="cmd-input"
+              placeholder="Type a command... (try: help, ls, dir, cat bio.txt, tree)"
+              autocomplete="off"
+              spellcheck="false"
+              aria-label="PowerShell Command Input"
+            />
           </div>
+        </div>
 
-          <div class="card-grid">
-            <article class="terminal-card">
-              <h2>&gt; Quick Navigation</h2>
-              <ul class="fact-list font-mono">
-                <li><a href="about.html" class="text-link">cd pages/about.html</a> - Bio &amp; background</li>
-                <li><a href="projects.html" class="text-link">cd pages/projects.html</a> - CMMS, C++, Graphics, &amp; LiDAR work</li>
-                <li><a href="contact.html" class="text-link">cd pages/contact.html</a> - Email &amp; social profiles</li>
-              </ul>
-            </article>
-
-            <article class="terminal-card">
-              <h2>&gt; Available CLI Commands</h2>
-              <ul class="fact-list font-mono">
-                <li><code>help</code> - Show full command guide &amp; shortcuts</li>
-                <li><code>ls</code> / <code>dir</code> - List files and directories</li>
-                <li><code>cat &lt;file&gt;</code> - View file contents / ASCII art</li>
-                <li><code>cd &lt;dir&gt;</code> - Change working directory</li>
-                <li><code>theme &lt;name&gt;</code> - Change terminal color palette</li>
-              </ul>
-            </article>
-          </div>
-
-          <div class="nav-footer">
-            <a href="../index.html" class="term-btn">&lt; Launch Interactive CLI Terminal</a>
-            <a href="about.html" class="term-btn">cd pages/about.html &gt;</a>
-            <a href="projects.html" class="term-btn">cd pages/projects.html &gt;</a>
-            <a href="contact.html" class="term-btn">cd pages/contact.html &gt;</a>
-          </div>
-        </section>
       </main>
+
+
+      <!-- ── STATUSBAR ── -->
+      <div class="terminal-statusbar" aria-label="Terminal Status Bar">
+        <div class="status-item">
+          <span class="status-label">PWD:</span>
+          <span id="status-pwd">C:\Users\DanielLee</span>
+        </div>
+        <div class="status-item">
+          <span class="status-label">ITEMS:</span>
+          <span id="status-items">5 items</span>
+        </div>
+        <div class="status-item mobile-hide">
+          <span class="status-label">SHELL:</span>
+          <span>PowerShell v10.0.19045</span>
+        </div>
+        <div class="status-item mobile-hide">
+          <span class="status-label">KEYS:</span>
+          <span><kbd>↑↓</kbd> history &nbsp; <kbd>Tab</kbd> complete &nbsp; <kbd>Ctrl+L</kbd> clear</span>
+        </div>
+      </div>
+
     </div>
-  </body>
+  </div>
+</body>
 </html>
