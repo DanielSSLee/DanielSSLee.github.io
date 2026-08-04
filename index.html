@@ -1,103 +1,1005 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Daniel Lee — Software Engineer & Computer Engineering @ Texas A&M</title>
-    <meta name="description" content="Interactive PowerShell Portfolio for Daniel Lee. Software Engineering, Computer Engineering @ Texas A&M, C++ Rendering, LiDAR, and Web Service Backends." />
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css" />
-    <script defer src="script.js"></script>
-  </head>
 
-  <body class="theme-powershell">
-    <!-- Scanlines CRT Effect Overlay -->
-    <div class="crt-overlay" aria-hidden="true"></div>
-    <div class="scanline" aria-hidden="true"></div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DanielOS — Seung Sik (Daniel) Lee Portfolio & Engineer Workspace</title>
+  <meta name="description"
+    content="DanielOS — Windows XP-inspired interactive desktop portfolio for Seung Sik (Daniel) Lee. B.S. Computer Engineering @ Texas A&M." />
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <script defer src="script.js"></script>
+</head>
 
-    <div class="app-container">
-      <!-- MAIN TERMINAL WINDOW - FULLSCREEN -->
-      <main class="terminal-window" id="terminal-window" tabindex="0" role="region" aria-label="PowerShell Interactive Console">
-        
-        <!-- WINDOW TITLEBAR -->
-        <header class="terminal-titlebar">
-          <div class="titlebar-left">
-            <div class="terminal-icon" aria-hidden="true">PS</div>
-            <span class="titlebar-text" id="window-title">Windows PowerShell — Daniel Lee [C:\Users\DanielLee]</span>
+<body class="os-winxp">
+
+  <!-- 1. DANIELOS BOOT ANIMATION SCREEN -->
+  <div class="boot-screen" id="boot-screen" onclick="dismissBoot()">
+    <button class="boot-skip-btn" id="boot-skip-btn" onclick="dismissBoot(); event.stopPropagation();">Skip Boot [ ESC
+      ]</button>
+    <div class="boot-logo-box">
+      <img src="images/logos/windows-xp.webp"
+        style="height: 60px; width: auto; filter: drop-shadow(0 0 10px rgba(53,147,255,0.6));" alt="DanielOS Logo" />
+      <span class="boot-title">DanielOS <span style="font-size: 16px; color: #ff9800;">v2.3</span></span>
+      <span class="boot-subtitle">Inspired by Windows XP • Built for Engineers</span>
+    </div>
+    <div class="boot-progress-track">
+      <div class="boot-progress-fill"></div>
+    </div>
+  </div>
+
+  <!-- INLINE FAILSAFE BOOT DISMISS SCRIPT -->
+  <script>
+    function dismissBoot() {
+      const el = document.getElementById('boot-screen');
+      if (el) {
+        el.style.display = 'none';
+        el.style.opacity = '0';
+        el.style.pointerEvents = 'none';
+        el.classList.add('hidden');
+      }
+      if (window.completeBootGlobal) window.completeBootGlobal();
+    }
+    setTimeout(dismissBoot, 1500);
+    document.addEventListener('keydown', dismissBoot);
+  </script>
+
+  <!-- SHUTDOWN SCREEN OVERLAY -->
+  <div class="shutdown-screen" id="shutdown-screen">
+    <div class="shutdown-logo-box">
+      <img src="images/logos/windows-xp.webp"
+        style="height: 54px; width: auto; filter: drop-shadow(0 0 12px rgba(53,147,255,0.5));" alt="DanielOS Logo" />
+      <span class="shutdown-title">DanielOS <span style="font-size:15px;color:#ff9800;">v2.3</span></span>
+      <span class="shutdown-subtitle">It is now safe to turn off your computer.</span>
+    </div>
+    <div class="shutdown-progress-track">
+      <div class="shutdown-progress-fill" id="shutdown-progress-fill"></div>
+    </div>
+    <span class="shutdown-status" id="shutdown-status">Saving your settings...</span>
+  </div>
+
+  <!-- MATRIX EASTER EGG CANVAS -->
+  <canvas id="matrix-canvas"></canvas>
+
+  <!-- RIGHT-CLICK DESKTOP CONTEXT MENU -->
+  <div class="context-menu" id="desktop-context-menu">
+    <div class="context-menu-item" id="ctx-refresh"><span>🔄</span> <span>Refresh</span></div>
+    <div class="context-menu-item" id="ctx-sort"><span>🗂️</span> <span>Sort Icons</span></div>
+    <div class="context-divider"></div>
+    <div class="context-menu-item" id="ctx-wp-hills"><span>🖼️</span> <span>Wallpaper: Low-Poly Hills</span></div>
+    <div class="context-menu-item" id="ctx-wp-bliss"><span>🌿</span> <span>Wallpaper: Classic Bliss</span></div>
+    <div class="context-menu-item" id="ctx-wp-cyber"><span>🌌</span> <span>Wallpaper: Dark Cyber</span></div>
+    <div class="context-divider"></div>
+    <div class="context-menu-item" id="ctx-winver"><span>⚙️</span> <span>About DanielOS</span></div>
+    <div class="context-menu-item" id="ctx-terminal"><span>⚡</span> <span>Open Terminal</span></div>
+  </div>
+
+  <!-- MAIN DESKTOP VIEWPORT -->
+  <div class="desktop-viewport" id="desktop-viewport">
+
+    <!-- DESKTOP CANVAS AREA -->
+    <main class="desktop-area" id="desktop-area">
+
+      <!-- DESKTOP SHORTCUT ICONS GRID (DRAGGABLE) -->
+      <div class="desktop-icons-grid" id="desktop-icons-grid">
+
+        <!-- Shortcut 1: About Daniel -->
+        <div class="desktop-icon" id="icon-about" data-window="win-about" style="top: 16px; left: 16px;">
+          <div class="icon-img-box">
+            <svg width="40" height="40" viewBox="0 0 64 64" fill="none">
+              <rect x="6" y="8" width="52" height="36" rx="4" fill="#0058EE" stroke="#002D80" stroke-width="2" />
+              <rect x="10" y="12" width="44" height="28" fill="#3593FF" />
+              <circle cx="32" cy="22" r="7" fill="#FFFFFF" />
+              <path d="M20 36C20 30 25 27 32 27C39 27 44 30 44 36H20Z" fill="#FFFFFF" />
+              <rect x="22" y="44" width="20" height="6" fill="#A0A0A0" />
+              <rect x="16" y="50" width="32" height="6" fill="#808080" />
+            </svg>
           </div>
-          
-          <div class="titlebar-controls">
-            <!-- Theme Quick Select -->
-            <div class="theme-picker-container">
-              <label for="theme-select" class="sr-only">Choose Terminal Theme</label>
-              <select id="theme-select" class="theme-select" aria-label="Select Theme">
-                <option value="powershell">Theme: PowerShell Blue</option>
-                <option value="matrix">Theme: Matrix Green</option>
-                <option value="amber">Theme: Amber CRT</option>
-                <option value="cyberpunk">Theme: Cyberpunk Neon</option>
-                <option value="dark">Theme: Modern Dark</option>
-              </select>
-            </div>
-            
-            <button class="win-btn crt-toggle-btn" id="crt-toggle" title="Toggle CRT Scanline Overlay">
-              CRT: ON
-            </button>
-            <button class="win-btn" id="btn-min" title="Minimize" aria-label="Minimize Window">_</button>
-            <button class="win-btn" id="btn-max" title="Maximize" aria-label="Maximize Window">□</button>
-            <button class="win-btn btn-close" id="btn-close" title="Close Window">✕</button>
-          </div>
-        </header>
-
-        <!-- TOP QUICK SHORTCUT BAR (Retro Bracket Buttons) -->
-        <nav class="quick-nav-bar" aria-label="Quick Terminal Commands">
-          <span class="nav-label">COMMANDS:</span>
-          <button class="quick-cmd-btn" data-cmd="help">[ help ]</button>
-          <button class="quick-cmd-btn" data-cmd="ls">[ ls ]</button>
-          <button class="quick-cmd-btn" data-cmd="cd pages/about.html">[ about ]</button>
-          <button class="quick-cmd-btn" data-cmd="cd pages/projects.html">[ projects ]</button>
-          <button class="quick-cmd-btn" data-cmd="cd pages/contact.html">[ contact ]</button>
-          <button class="quick-cmd-btn" data-cmd="cat bio.txt">[ cat bio.txt ]</button>
-          <button class="quick-cmd-btn" data-cmd="ascii avatar">[ ascii avatar ]</button>
-          <button class="quick-cmd-btn" data-cmd="clear">[ clear ]</button>
-        </nav>
-
-        <!-- TERMINAL SCREEN / OUTPUT LOG -->
-        <div class="terminal-body" id="terminal-body">
-          <div id="terminal-output" class="terminal-output" aria-live="polite">
-            <!-- Initial prominent header & dashboard populated by JS engine -->
-          </div>
-
-          <!-- ACTIVE PROMPT INPUT LINE (HIGH VISIBILITY) -->
-          <div class="terminal-input-row" id="input-row">
-            <span class="prompt-string" id="prompt-string">PS C:\Users\DanielLee&gt;</span>
-            <div class="input-wrapper">
-              <input 
-                type="text" 
-                id="cmd-input" 
-                class="cmd-input" 
-                autocomplete="off" 
-                autocorrect="off" 
-                autocapitalize="off" 
-                spellcheck="false" 
-                aria-label="Terminal Command Input"
-                placeholder="⚡ TYPE A COMMAND HERE (e.g. 'help', 'cd pages/projects.html', 'ls')..." 
-              />
-            </div>
-          </div>
+          <span class="icon-label">About Daniel</span>
         </div>
 
-        <!-- STATUS BAR -->
-        <footer class="terminal-statusbar">
-          <div class="status-item"><span class="status-label">PWD:</span> <span id="status-pwd">C:\Users\DanielLee</span></div>
-          <div class="status-item"><span class="status-label">Items:</span> <span id="status-items">7 items</span></div>
-          <div class="status-item mobile-hide"><span class="status-label">CLI Controls:</span> <kbd>Tab</kbd> Autocomplete | <kbd>↑</kbd>/<kbd>↓</kbd> History</div>
-          <div class="status-item"><span class="status-label">Status:</span> <span class="status-value">Active Terminal Shell</span></div>
-        </footer>
+        <!-- Shortcut 2: Projects Explorer -->
+        <div class="desktop-icon" id="icon-projects" data-window="win-projects" style="top: 116px; left: 16px;">
+          <div class="icon-img-box">
+            <svg width="40" height="40" viewBox="0 0 64 64" fill="none">
+              <path
+                d="M6 16C6 12.6863 8.68629 10 12 10H24L30 18H52C55.3137 18 58 20.6863 58 24V50C58 53.3137 55.3137 56 52 56H12C8.68629 56 6 53.3137 6 50V16Z"
+                fill="#FFC107" />
+              <path d="M10 24H54L50 52H14L10 24Z" fill="#FFE082" stroke="#FF8F00" stroke-width="1.5" />
+            </svg>
+          </div>
+          <span class="icon-label">Projects</span>
+        </div>
 
-      </main>
+        <!-- Shortcut 3: Resume.pdf -->
+        <div class="desktop-icon" id="icon-resume" data-window="win-resume" style="top: 216px; left: 16px;">
+          <div class="icon-img-box">
+            <svg width="40" height="40" viewBox="0 0 64 64" fill="none">
+              <path d="M14 8H40L50 18V56H14V8Z" fill="#E53935" stroke="#B71C1C" stroke-width="2" />
+              <path d="M40 8V18H50" fill="#FF8A80" />
+              <text x="20" y="38" fill="#FFFFFF" font-weight="bold" font-size="12" font-family="sans-serif">PDF</text>
+            </svg>
+          </div>
+          <span class="icon-label">Resume.pdf</span>
+        </div>
+
+        <!-- Shortcut 4: Portfolio Browser -->
+        <div class="desktop-icon" id="icon-contact" data-window="win-contact" style="top: 316px; left: 16px;">
+          <div class="icon-img-box">
+            <svg width="40" height="40" viewBox="0 0 64 64" fill="none">
+              <circle cx="32" cy="32" r="26" fill="#0058EE" stroke="#003399" stroke-width="2" />
+              <path d="M12 30C16 18 48 18 52 30C52 44 20 48 12 30Z" stroke="#FFE600" stroke-width="6"
+                stroke-linecap="round" />
+              <text x="23" y="42" fill="#FFFFFF" font-weight="bold" font-size="32" font-family="sans-serif">e</text>
+            </svg>
+          </div>
+          <span class="icon-label">Portfolio Browser</span>
+        </div>
+
+        <!-- Shortcut 5: VS Code App -->
+        <div class="desktop-icon" id="icon-vscode" data-window="win-vscode" style="top: 16px; left: 112px;">
+          <div class="icon-img-box">
+            <svg width="40" height="40" viewBox="0 0 64 64" fill="none">
+              <rect width="64" height="64" rx="10" fill="#007ACC" />
+              <path d="M46 12L24 30L12 20L6 24L18 32L6 40L12 44L24 34L46 52V12Z" fill="#FFFFFF" />
+            </svg>
+          </div>
+          <span class="icon-label">VS Code</span>
+        </div>
+
+        <!-- Shortcut 6: cmd.exe Terminal -->
+        <div class="desktop-icon" id="icon-terminal" data-window="win-terminal" style="top: 116px; left: 112px;">
+          <div class="icon-img-box">
+            <svg width="40" height="40" viewBox="0 0 64 64" fill="none">
+              <rect width="64" height="64" rx="6" fill="#000000" stroke="#808080" stroke-width="2" />
+              <path d="M12 18L24 28L12 38" stroke="#00FF00" stroke-width="4" stroke-linecap="round" />
+              <line x1="28" y1="38" x2="44" y2="38" stroke="#FFFFFF" stroke-width="4" />
+            </svg>
+          </div>
+          <span class="icon-label">cmd.exe</span>
+        </div>
+
+        <!-- Shortcut 7: Control Panel -->
+        <div class="desktop-icon" id="icon-settings" data-window="win-settings" style="top: 216px; left: 112px;">
+          <div class="icon-img-box">
+            <svg width="40" height="40" viewBox="0 0 64 64" fill="none">
+              <rect width="64" height="64" rx="8" fill="#607D8B" />
+              <circle cx="32" cy="32" r="14" stroke="#FFFFFF" stroke-width="5" />
+              <path d="M32 8V16M32 48V56M8 32H16M48 32H56" stroke="#FFFFFF" stroke-width="4" />
+            </svg>
+          </div>
+          <span class="icon-label">Control Panel</span>
+        </div>
+
+        <!-- Shortcut 8: Recycle Bin -->
+        <div class="desktop-icon" id="icon-trash" data-window="win-trash" style="top: 316px; left: 112px;">
+          <div class="icon-img-box">
+            <svg width="40" height="40" viewBox="0 0 64 64" fill="none">
+              <rect width="64" height="64" rx="8" fill="#78909C" />
+              <path d="M18 22H46M24 22V16H40V22M20 22L24 54H40L44 22" stroke="#FFFFFF" stroke-width="3" />
+            </svg>
+          </div>
+          <span class="icon-label">Recycle Bin</span>
+        </div>
+
+      </div>
+
+      <!-- WINDOWS CONTAINER (Draggable Windows) -->
+      <div class="windows-container" id="windows-container">
+
+        <!-- 1. ABOUT DANIEL WINDOW (OPEN ON LOAD) -->
+        <div class="window active-window" id="win-about"
+          style="top: 30px; left: 220px; width: 680px; height: 460px; z-index: 500;">
+          <div class="window-titlebar">
+            <div class="titlebar-info">
+              <span class="titlebar-icon">👤</span>
+              <span class="titlebar-title">About Daniel — Seung Sik Lee</span>
+            </div>
+            <div class="window-controls">
+              <button class="win-btn btn-min" title="Minimize">_</button>
+              <button class="win-btn btn-max" title="Maximize">□</button>
+              <button class="win-btn btn-close" title="Close">✕</button>
+            </div>
+          </div>
+          <div class="window-body">
+            <div class="xp-inset-box">
+              <h2 style="color: #003399; font-size: 16px;">Seung Sik (Daniel) Lee</h2>
+              <p style="color: #555555; margin-top: 2px; font-weight: bold;">B.S. Computer Engineering @ Texas A&amp;M
+                University (Math Minor) • Graduated May 2026</p>
+              <p style="color: #555555; font-size: 11px;">Engineering Technician (Software Systems) @ US Modules</p>
+
+              <div class="card-grid">
+                <article class="content-card">
+                  <h3>System Biography</h3>
+                  <p>Hi! I’m <strong>Seung Sik (Daniel) Lee</strong>, a computer engineering graduate focused on
+                    software systems, full-stack containerized platforms, computer vision, data pipelines, and game
+                    development.</p>
+                  <p style="margin-top: 8px;">I currently work at <strong>US Modules</strong> as an Engineering
+                    Technician, scaling maintenance platforms using Docker Compose, FastAPI, and PostgreSQL.</p>
+                </article>
+
+                <article class="content-card">
+                  <h3>Computer Specifications</h3>
+                  <ul style="list-style: none; display: flex; flex-direction: column; gap: 6px; font-size: 11px;">
+                    <li><strong>Degree:</strong> B.S. Computer Engineering (Minor in Math)</li>
+                    <li><strong>School:</strong> Texas A&amp;M University (Graduated May 2026)</li>
+                    <li><strong>Current Role:</strong> Software Systems Eng Tech @ US Modules</li>
+                    <li><strong>Past Role:</strong> Data Analytics Intern @ KW Internationals</li>
+                    <li><strong>Contact:</strong> +1 (858) 209-8444 | seungsik.daniel.lee@gmail.com</li>
+                  </ul>
+                </article>
+              </div>
+
+              <div class="content-card" style="margin-top: 12px;">
+                <h3>Technical Stack &amp; Tools</h3>
+                <div class="tech-tags">
+                  <span class="tech-tag">C++ / C</span>
+                  <span class="tech-tag">Python</span>
+                  <span class="tech-tag">JavaScript / TypeScript</span>
+                  <span class="tech-tag">React</span>
+                  <span class="tech-tag">FastAPI</span>
+                  <span class="tech-tag">Docker Compose</span>
+                  <span class="tech-tag">PostgreSQL / SQL</span>
+                  <span class="tech-tag">AWS (S3, CloudFront, Route 53)</span>
+                  <span class="tech-tag">Unreal Engine 5 (Blueprints/C++)</span>
+                  <span class="tech-tag">OpenCV &amp; Vitis AI</span>
+                  <span class="tech-tag">Power BI &amp; Excel</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="resize-handle nw"></div>
+          <div class="resize-handle ne"></div>
+          <div class="resize-handle sw"></div>
+          <div class="resize-handle se"></div>
+        </div>
+
+        <!-- 2. PROJECTS ROOT EXPLORER WINDOW (OPEN ON LOAD) -->
+        <div class="window active-window" id="win-projects"
+          style="top: 70px; left: 380px; width: 680px; height: 460px; z-index: 501;">
+          <div class="window-titlebar">
+            <div class="titlebar-info">
+              <span class="titlebar-icon">📂</span>
+              <span class="titlebar-title">Projects Explorer — C:\DanielOS\Projects</span>
+            </div>
+            <div class="window-controls">
+              <button class="win-btn btn-min" title="Minimize">_</button>
+              <button class="win-btn btn-max" title="Maximize">□</button>
+              <button class="win-btn btn-close" title="Close">✕</button>
+            </div>
+          </div>
+          <div class="window-body">
+            <div class="xp-inset-box">
+              <p style="color: #666; font-size: 11px;">Double-click a project folder below to open its dedicated
+                Explorer window:</p>
+
+              <div class="explorer-grid">
+
+                <div class="explorer-folder-item" data-open-win="win-project-zoho">
+                  <div class="explorer-folder-icon">
+                    <svg width="42" height="42" viewBox="0 0 64 64" fill="none">
+                      <path
+                        d="M6 16C6 12.6863 8.68629 10 12 10H24L30 18H52C55.3137 18 58 20.6863 58 24V50C58 53.3137 55.3137 56 52 56H12C8.68629 56 6 53.3137 6 50V16Z"
+                        fill="#FFC107" />
+                      <path d="M10 24H54L50 52H14L10 24Z" fill="#FFE082" stroke="#FF8F00" stroke-width="1.5" />
+                    </svg>
+                  </div>
+                  <span class="explorer-folder-label">📁 Zoho Data Automation</span>
+                </div>
+
+                <div class="explorer-folder-item" data-open-win="win-project-yolo">
+                  <div class="explorer-folder-icon">
+                    <svg width="42" height="42" viewBox="0 0 64 64" fill="none">
+                      <path
+                        d="M6 16C6 12.6863 8.68629 10 12 10H24L30 18H52C55.3137 18 58 20.6863 58 24V50C58 53.3137 55.3137 56 52 56H12C8.68629 56 6 53.3137 6 50V16Z"
+                        fill="#FFC107" />
+                      <path d="M10 24H54L50 52H14L10 24Z" fill="#FFE082" stroke="#FF8F00" stroke-width="1.5" />
+                    </svg>
+                  </div>
+                  <span class="explorer-folder-label">📁 YOLO Object Detection</span>
+                </div>
+
+                <div class="explorer-folder-item" data-open-win="win-project-roguelite">
+                  <div class="explorer-folder-icon">
+                    <svg width="42" height="42" viewBox="0 0 64 64" fill="none">
+                      <path
+                        d="M6 16C6 12.6863 8.68629 10 12 10H24L30 18H52C55.3137 18 58 20.6863 58 24V50C58 53.3137 55.3137 56 52 56H12C8.68629 56 6 53.3137 6 50V16Z"
+                        fill="#FFC107" />
+                      <path d="M10 24H54L50 52H14L10 24Z" fill="#FFE082" stroke="#FF8F00" stroke-width="1.5" />
+                    </svg>
+                  </div>
+                  <span class="explorer-folder-label">📁 UE5 Roguelite Game</span>
+                </div>
+
+                <div class="explorer-folder-item" data-open-win="win-project-aws">
+                  <div class="explorer-folder-icon">
+                    <svg width="42" height="42" viewBox="0 0 64 64" fill="none">
+                      <path
+                        d="M6 16C6 12.6863 8.68629 10 12 10H24L30 18H52C55.3137 18 58 20.6863 58 24V50C58 53.3137 55.3137 56 52 56H12C8.68629 56 6 53.3137 6 50V16Z"
+                        fill="#FFC107" />
+                      <path d="M10 24H54L50 52H14L10 24Z" fill="#FFE082" stroke="#FF8F00" stroke-width="1.5" />
+                    </svg>
+                  </div>
+                  <span class="explorer-folder-label">📁 AWS Cloud Portfolio</span>
+                </div>
+
+                <div class="explorer-folder-item" data-open-win="win-project-cmms">
+                  <div class="explorer-folder-icon">
+                    <svg width="42" height="42" viewBox="0 0 64 64" fill="none">
+                      <path
+                        d="M6 16C6 12.6863 8.68629 10 12 10H24L30 18H52C55.3137 18 58 20.6863 58 24V50C58 53.3137 55.3137 56 52 56H12C8.68629 56 6 53.3137 6 50V16Z"
+                        fill="#FFC107" />
+                      <path d="M10 24H54L50 52H14L10 24Z" fill="#FFE082" stroke="#FF8F00" stroke-width="1.5" />
+                    </svg>
+                  </div>
+                  <span class="explorer-folder-label">📁 US Modules Maintenance</span>
+                </div>
+
+                <div class="explorer-folder-item" data-open-win="win-project-restaurant">
+                  <div class="explorer-folder-icon">
+                    <svg width="42" height="42" viewBox="0 0 64 64" fill="none">
+                      <path
+                        d="M6 16C6 12.6863 8.68629 10 12 10H24L30 18H52C55.3137 18 58 20.6863 58 24V50C58 53.3137 55.3137 56 52 56H12C8.68629 56 6 53.3137 6 50V16Z"
+                        fill="#FFC107" />
+                      <path d="M10 24H54L50 52H14L10 24Z" fill="#FFE082" stroke="#FF8F00" stroke-width="1.5" />
+                    </svg>
+                  </div>
+                  <span class="explorer-folder-label">📁 Restaurant Dashboard</span>
+                </div>
+
+              </div>
+            </div>
+          </div>
+          <div class="resize-handle nw"></div>
+          <div class="resize-handle ne"></div>
+          <div class="resize-handle sw"></div>
+          <div class="resize-handle se"></div>
+        </div>
+
+        <!-- 3. RESUME VIEWER WINDOW -->
+        <div class="window closed minimized" id="win-resume"
+          style="top: 40px; left: 240px; width: 780px; height: 540px;">
+          <div class="window-titlebar">
+            <div class="titlebar-info">
+              <span class="titlebar-icon">📜</span>
+              <span class="titlebar-title">Resume.pdf — Seung Sik (Daniel) Lee</span>
+            </div>
+            <div class="window-controls">
+              <button class="win-btn btn-min">_</button><button class="win-btn btn-max">□</button><button
+                class="win-btn btn-close">✕</button>
+            </div>
+          </div>
+          <div class="window-body">
+            <div style="display: flex; gap: 10px; margin-bottom: 8px;">
+              <button class="action-btn" onclick="window.print()" style="padding: 6px 16px;">🖨️ Print / Save as
+                PDF</button>
+              <a href="mailto:seungsik.daniel.lee@gmail.com" class="action-btn"
+                style="padding: 6px 16px; text-decoration: none;">✉️ Contact Daniel</a>
+            </div>
+
+            <!-- Formatted LaTeX Resume Paper -->
+            <div class="resume-paper">
+              <div class="resume-header-title">Seung Sik Lee</div>
+              <div class="resume-header-contact">
+                +1 (858) 209-8444 | <a href="mailto:seungsik.daniel.lee@gmail.com">seungsik.daniel.lee@gmail.com</a> |
+                <a href="https://linkedin.com/in/ssiklee" target="_blank">linkedin.com/in/ssiklee</a>
+              </div>
+
+              <!-- EDUCATION -->
+              <div class="resume-section-heading">Education</div>
+              <div class="resume-entry">
+                <div class="resume-entry-header">
+                  <span>Texas A&amp;M University</span>
+                  <span>College Station, TX</span>
+                </div>
+                <div class="resume-entry-sub">
+                  <span>Bachelor of Science - Major in Computer Engineering, Minor in Mathematics</span>
+                  <span>Graduated May 2026</span>
+                </div>
+              </div>
+
+              <!-- EXPERIENCE -->
+              <div class="resume-section-heading">Experience</div>
+
+              <div class="resume-entry">
+                <div class="resume-entry-header">
+                  <span>Engineering Technician (Software Systems)</span>
+                  <span>June 2026 – Present</span>
+                </div>
+                <div class="resume-entry-sub">
+                  <span>US Modules</span>
+                  <span>College Station, TX</span>
+                </div>
+                <ul class="resume-bullets">
+                  <li>Maintained, containerized, and scaled a full-stack maintenance management platform using Docker
+                    Compose, FastAPI, and PostgreSQL.</li>
+                  <li>Resolved critical backend challenges by performing complex database schema migrations and
+                    troubleshooting SQL transaction failures to guarantee system uptime.</li>
+                  <li>Iterated on platform functionality by integrating internal user feedback, resolving edge-case
+                    bugs, and streamlining operational workflows.</li>
+                </ul>
+              </div>
+
+              <div class="resume-entry">
+                <div class="resume-entry-header">
+                  <span>Data Analytics Intern</span>
+                  <span>May 2025 – July 2025</span>
+                </div>
+                <div class="resume-entry-sub">
+                  <span>KW Internationals</span>
+                  <span>Plano, TX</span>
+                </div>
+                <ul class="resume-bullets">
+                  <li>Built centralized Excel dataset from 3 years of operational data for real-time business reporting.
+                  </li>
+                  <li>Maintained and updated Power BI dashboards to reflect current operational trends and improve
+                    decision-making accuracy.</li>
+                  <li>Supported an automation initiative with Samsung by visiting warehouse pilot sites and observing
+                    deployment of Reflex Robotics’ solutions.</li>
+                  <li>Developed a Python-based tool to automate Zoho Desk and Zoho FSM data retrieval via REST APIs,
+                    dynamic Excel table resizing, and Power BI dashboard refresh.</li>
+                </ul>
+              </div>
+
+              <div class="resume-entry">
+                <div class="resume-entry-header">
+                  <span>Sub-Instructor &amp; Judge, Taekwondo</span>
+                  <span>June 2019 – June 2022</span>
+                </div>
+                <div class="resume-entry-sub">
+                  <span>ATA Moon Taekwondo</span>
+                  <span>San Diego, CA</span>
+                </div>
+                <ul class="resume-bullets">
+                  <li>Assisted Head Instructor by preparing materials, managing class logistics, and leading classes
+                    independently.</li>
+                  <li>Judged Taekwondo competitions; calculated points and collaborated with judges to ensure fairness.
+                  </li>
+                </ul>
+              </div>
+
+              <div class="resume-entry">
+                <div class="resume-entry-header">
+                  <span>Math Tutor (Freelance &amp; Online)</span>
+                  <span>May 2023 – Present</span>
+                </div>
+                <div class="resume-entry-sub">
+                  <span>Self-Employed &amp; Littera Education</span>
+                  <span>Plano, TX &amp; Remote</span>
+                </div>
+                <ul class="resume-bullets">
+                  <li>Tutored middle and high school students in algebra, geometry, and precalculus, customizing
+                    learning strategies.</li>
+                </ul>
+              </div>
+
+              <!-- PROJECTS -->
+              <div class="resume-section-heading">Projects</div>
+
+              <div class="resume-entry">
+                <div class="resume-entry-header">
+                  <span>Zoho Data Automation Tool | <span style="font-weight:normal; font-style:italic;">Python, pandas,
+                      openpyxl, pywin32, Power BI, Zoho REST APIs</span></span>
+                  <span>May 2025 – July 2025</span>
+                </div>
+                <ul class="resume-bullets">
+                  <li>Built multi-threaded pipeline using <code>ThreadPoolExecutor(max_workers=10)</code> to extract
+                    Zoho Desk &amp; FSM records concurrently via OAuth2 tokens.</li>
+                  <li>Calculated SLA TAT metrics with <code>numpy.busday_offset</code> and holidays; inserted data using
+                    <code>openpyxl</code> &amp; <code>pandas</code> datetime sorting.
+                  </li>
+                  <li>Automated Win32 COM Excel table resizing (<code>win32com.client</code>) and auto-launched Power BI
+                    workbooks (<code>.pbix</code>).</li>
+                </ul>
+              </div>
+
+              <div class="resume-entry">
+                <div class="resume-entry-header">
+                  <span>YOLO Object Detection on TFA Videos | <span style="font-weight:normal; font-style:italic;">C++,
+                      Vitis AI, OpenCV, YOLOv4-Tiny</span></span>
+                  <span>Aug 2025 – Dec 2025</span>
+                </div>
+                <ul class="resume-bullets">
+                  <li>Developed an object detection pipeline using specialized YOLO models for drones, vehicles, and
+                    humans to improve per-class accuracy.</li>
+                  <li>Designed and tested real-time detection on video input, optimizing system performance for
+                    constrained hardware.</li>
+                  <li>Trained models with custom datasets and validated performance through iterative test procedures
+                    and analysis.</li>
+                </ul>
+              </div>
+
+              <div class="resume-entry">
+                <div class="resume-entry-header">
+                  <span>Roguelite Game Development | <span style="font-weight:normal; font-style:italic;">Unreal Engine
+                      5, Blueprints, Git</span></span>
+                  <span>Jan 2026 – Present</span>
+                </div>
+                <ul class="resume-bullets">
+                  <li>Developing a complex 3D roguelite within Unreal Engine 5, focusing on modular inventory systems
+                    and weapon attachment frameworks.</li>
+                  <li>Architected player controller logic and dynamic UI drag-and-drop systems using Blueprints and Data
+                    Assets.</li>
+                </ul>
+              </div>
+
+              <div class="resume-entry">
+                <div class="resume-entry-header">
+                  <span>AWS Cloud Portfolio | <span style="font-weight:normal; font-style:italic;">AWS (S3, CloudFront,
+                      Route 53), GitHub Actions, HTML/CSS</span></span>
+                  <span>April 2026 – June 2026</span>
+                </div>
+                <ul class="resume-bullets">
+                  <li>Engineered a high-availability portfolio website using AWS S3 for static hosting and CloudFront as
+                    a CDN for global distribution.</li>
+                  <li>Managed DNS records and SSL/TLS certificates via Route 53 and AWS Certificate Manager to ensure
+                    secure access.</li>
+                  <li>Automated deployment pipeline using GitHub Actions to synchronize repository changes directly to
+                    S3 upon push.</li>
+                </ul>
+              </div>
+
+            </div>
+          </div>
+          <div class="resize-handle nw"></div>
+          <div class="resize-handle ne"></div>
+          <div class="resize-handle sw"></div>
+          <div class="resize-handle se"></div>
+        </div>
+
+        handle ne">
+      </div>
+      <div class="resize-handle sw"></div>
+      <div class="resize-handle se"></div>
+  </div>
+
+  <!-- 4. NESTED PROJECT: ZOHO DATA AUTOMATION (DETAILED CODE & ARCHITECTURE) -->
+  <div class="window closed minimized" id="win-project-zoho"
+    style="top: 80px; left: 220px; width: 780px; height: 530px;">
+    <div class="window-titlebar">
+      <div class="titlebar-info"><span class="titlebar-icon">📁</span><span class="titlebar-title">Projects —
+          C:\DanielOS\Projects\Zoho Data Automation</span></div>
+      <div class="window-controls"><button class="win-btn btn-min">_</button><button
+          class="win-btn btn-max">□</button><button class="win-btn btn-close">✕</button></div>
     </div>
-  </body>
+    <div class="window-body">
+      <div class="xp-inset-box">
+        <h2 style="color: #003399;">Zoho Data Automation Tool</h2>
+        <p style="margin-top: 4px; color: #555; font-weight: bold;">Python, pandas, openpyxl, pywin32, requests, numpy,
+          schedule, Power BI, Zoho Desk &amp; FSM REST APIs</p>
+        <p style="margin-top: 2px; color: #888; font-size: 10px;">KW Internationals (May 2025 – July 2025)</p>
+
+        <div class="content-card" style="margin-top: 12px;">
+          <h3>Pipeline Architecture &amp; Code Breakdown</h3>
+
+          <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 8px; font-size: 11px;">
+            <div style="background: #f4f8fd; border-left: 3px solid #0053ee; padding: 8px;">
+              <strong>1. Concurrent API Harvester (<code>zohofsmExport.py</code> &amp;
+                <code>zohodeskExport.py</code>):</strong><br />
+              - Multi-threaded pagination using <code>ThreadPoolExecutor(max_workers=10)</code> to pull OAuth2 tickets,
+              requests, and work orders.<br />
+              - Flattens complex JSON structures recursively (<code>flatten_json()</code>) and maps fields dynamically
+              via custom text mapping files.<br />
+              - Computes SLA Turnaround Times (TAT) using <code>numpy.busday_offset</code> and custom holiday arrays.
+            </div>
+
+            <div style="background: #f4f8fd; border-left: 3px solid #0053ee; padding: 8px;">
+              <strong>2. Template Injector &amp; Formula Engine (<code>insert_to_ticket.py</code> &amp;
+                <code>tickets_to_tickets.py</code>):</strong><br />
+              - Uses <code>openpyxl</code> to clear old data and inject clean Request &amp; Work Order records into
+              <code>Ticket_Template.xlsx</code>.<br />
+              - Formats closed timestamps with <code>pandas.to_datetime()</code> and populates dynamic Excel formulas
+              (<code>WORKDAY</code>, <code>NETWORKDAYS</code>, <code>VLOOKUP</code>, <code>IFERROR</code>).
+            </div>
+
+            <div style="background: #f4f8fd; border-left: 3px solid #0053ee; padding: 8px;">
+              <strong>3. Win32 COM &amp; Table Resizer (<code>pywin32</code> /
+                <code>win32com.client</code>):</strong><br />
+              - Interacts directly with Windows Excel COM interface
+              (<code>win32com.client.Dispatch("Excel.Application")</code>).<br />
+              - Dynamically calculates the new data range and resizes <code>ListObject("Table1")</code> automatically,
+              prompting a native Windows message box via <code>ctypes.windll.user32.MessageBoxW</code>.
+            </div>
+
+            <div style="background: #f4f8fd; border-left: 3px solid #0053ee; padding: 8px;">
+              <strong>4. Pipeline Orchestration &amp; Power BI Auto-Launch
+                (<code>run_pipeline.py</code>):</strong><br />
+              - Multi-process execution using Python <code>threading.Thread</code> and
+              <code>subprocess.Popen</code>.<br />
+              - Automatically cleans COM cache (<code>Del_Cache.py</code>) and launches Power BI Desktop
+              (<code>CUCHEN Draft.v2.pbix</code>) upon completion!
+            </div>
+          </div>
+
+          <div class="tech-tags" style="margin-top: 12px;">
+            <span class="tech-tag">Python 3</span>
+            <span class="tech-tag">ThreadPoolExecutor</span>
+            <span class="tech-tag">pandas</span>
+            <span class="tech-tag">openpyxl</span>
+            <span class="tech-tag">pywin32 (Win32 COM)</span>
+            <span class="tech-tag">numpy busday</span>
+            <span class="tech-tag">Power BI (.pbix)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="resize-handle nw"></div>
+    <div class="resize-handle ne"></div>
+    <div class="resize-handle sw"></div>
+    <div class="resize-handle se"></div>
+  </div>
+
+  <!-- 5. NESTED PROJECT: YOLO OBJECT DETECTION WITH VIDEO DEMO & DISCLAIMER -->
+  <div class="window closed minimized" id="win-project-yolo"
+    style="top: 110px; left: 260px; width: 760px; height: 540px;">
+    <div class="window-titlebar">
+      <div class="titlebar-info"><span class="titlebar-icon">📹</span><span class="titlebar-title">Projects —
+          C:\DanielOS\Projects\YOLO Object Detection</span></div>
+      <div class="window-controls"><button class="win-btn btn-min">_</button><button
+          class="win-btn btn-max">□</button><button class="win-btn btn-close">✕</button></div>
+    </div>
+    <div class="window-body">
+      <div class="xp-inset-box">
+        <h2 style="color: #003399;">YOLO Object Detection on TFA Videos</h2>
+        <p style="margin-top: 4px; color: #555; font-weight: bold;">C++, Vitis AI, OpenCV, YOLOv4-Tiny (Aug 2025 – Dec
+          2025)</p>
+
+        <!-- REAL-TIME VIDEO DEMONSTRATION -->
+        <div class="content-card" style="margin-top: 12px;">
+          <h3>📹 Real-Time Detection Video Demonstration</h3>
+          <video controls autoplay loop muted
+            style="width: 100%; max-height: 280px; border-radius: 4px; border: 1px solid #003399; margin-top: 6px; background: #000;">
+            <source src="videos-slash-clips/yolovideo.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+          <p
+            style="font-size: 11px; color: #555; margin-top: 6px; font-style: italic; background: #fffbe6; border: 1px solid #ffe58f; padding: 6px 10px; border-radius: 3px;">
+            ⚠️ <strong>Disclaimer:</strong> Video demonstration recorded &amp; produced by another teammate for TFA
+            object detection hardware testing.
+          </p>
+        </div>
+
+        <div class="content-card" style="margin-top: 12px;">
+          <h3>Key Technical Achievements</h3>
+          <ul style="list-style: square; padding-left: 18px;">
+            <li>Developed an object detection pipeline using specialized YOLO models for drones, vehicles, and humans to
+              improve per-class accuracy.</li>
+            <li>Designed and tested real-time detection on video input, optimizing system performance for constrained
+              hardware.</li>
+            <li>Trained models with custom datasets and validated performance through iterative test procedures.</li>
+          </ul>
+          <div class="tech-tags" style="margin-top: 8px;">
+            <span class="tech-tag">C++</span><span class="tech-tag">Vitis AI</span><span
+              class="tech-tag">OpenCV</span><span class="tech-tag">YOLOv4-Tiny</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="resize-handle nw"></div>
+    <div class="resize-handle ne"></div>
+    <div class="resize-handle sw"></div>
+    <div class="resize-handle se"></div>
+  </div>
+
+  <!-- 6. NESTED PROJECT: UE5 ROGUELITE GAME WITH DIRECT LINK -->
+  <div class="window closed minimized" id="win-project-roguelite"
+    style="top: 120px; left: 280px; width: 760px; height: 500px;">
+    <div class="window-titlebar">
+      <div class="titlebar-info"><span class="titlebar-icon">🎮</span><span class="titlebar-title">Projects —
+          C:\DanielOS\Projects\UE5 Roguelite Game</span></div>
+      <div class="window-controls"><button class="win-btn btn-min">_</button><button
+          class="win-btn btn-max">□</button><button class="win-btn btn-close">✕</button></div>
+    </div>
+    <div class="window-body">
+      <div class="xp-inset-box" style="text-align: center;">
+        <h2 style="color: #003399;">Roguelite Game Development (KitKatch)</h2>
+        <p style="margin-top: 4px; color: #555; font-weight: bold;">Unreal Engine 5, Blueprints, Git (Jan 2026 –
+          Present)</p>
+
+        <div class="content-card" style="margin-top: 14px; text-align: left;">
+          <h3>Game Systems &amp; Features</h3>
+          <ul style="list-style: square; padding-left: 18px;">
+            <li>Developing a complex 3D roguelite within Unreal Engine 5, focusing on modular inventory systems and
+              weapon attachment frameworks.</li>
+            <li>Architected player controller logic and dynamic UI drag-and-drop systems using Blueprints and Data
+              Assets.</li>
+            <li>Collaborating in a team environment to iterate on gameplay mechanics, utilizing Git for version control.
+            </li>
+          </ul>
+        </div>
+
+        <div style="margin-top: 20px;">
+          <a href="https://kitkatch.itch.io/kitkatch" target="_blank" class="action-btn"
+            style="font-size: 14px; padding: 10px 24px; text-decoration: none;">
+            🚀 Launch UE5 Roguelite Game on itch.io (kitkatch.itch.io/kitkatch)
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="resize-handle nw"></div>
+    <div class="resize-handle ne"></div>
+    <div class="resize-handle sw"></div>
+    <div class="resize-handle se"></div>
+  </div>
+
+  <!-- 7. NESTED PROJECT: AWS CLOUD PORTFOLIO -->
+  <div class="window closed minimized" id="win-project-aws"
+    style="top: 130px; left: 300px; width: 760px; height: 500px;">
+    <div class="window-titlebar">
+      <div class="titlebar-info"><span class="titlebar-icon">☁️</span><span class="titlebar-title">Projects —
+          C:\DanielOS\Projects\AWS Cloud Portfolio</span></div>
+      <div class="window-controls"><button class="win-btn btn-min">_</button><button
+          class="win-btn btn-max">□</button><button class="win-btn btn-close">✕</button></div>
+    </div>
+    <div class="window-body">
+      <div class="xp-inset-box">
+        <h2 style="color: #003399;">AWS Cloud Portfolio Website</h2>
+        <p style="margin-top: 4px; color: #555;">AWS (S3, CloudFront, Route 53), GitHub Actions, HTML/CSS (April 2026 –
+          June 2026)</p>
+        <div class="content-card" style="margin-top: 12px;">
+          <ul style="list-style: square; padding-left: 18px;">
+            <li>Engineered a high-availability portfolio website using AWS S3 for static hosting and CloudFront as a CDN
+              for global distribution.</li>
+            <li>Managed DNS records and SSL/TLS certificates via Route 53 and AWS Certificate Manager to ensure secure,
+              low-latency user access.</li>
+            <li>Automated the deployment pipeline using GitHub Actions to synchronize repository changes directly to the
+              S3 bucket upon push.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="resize-handle nw"></div>
+    <div class="resize-handle ne"></div>
+    <div class="resize-handle sw"></div>
+    <div class="resize-handle se"></div>
+  </div>
+
+  <!-- 8. INTERACTIVE VS CODE APPLICATION WINDOW -->
+  <div class="window closed minimized" id="win-vscode" style="top: 50px; left: 160px; width: 840px; height: 540px;">
+    <div class="window-titlebar" style="background: #3c3c3c;">
+      <div class="titlebar-info">
+        <span class="titlebar-icon">📝</span>
+        <span class="titlebar-title">Visual Studio Code — Seung Sik Lee Workspace</span>
+      </div>
+      <div class="window-controls">
+        <button class="win-btn btn-min">_</button><button class="win-btn btn-max">□</button><button
+          class="win-btn btn-close">✕</button>
+      </div>
+    </div>
+    <div class="vscode-window-body">
+      <!-- VS Code Left Sidebar -->
+      <div class="vscode-sidebar">
+        <div class="vscode-sidebar-title">Explorer</div>
+        <div class="vscode-file-tree">
+          <div class="tree-item" style="font-weight: bold;">📁 DanielOS-Portfolio</div>
+          <div class="tree-item tree-indent tab-trigger active" data-file="readme">📄 README.md</div>
+          <div class="tree-item tree-indent tab-trigger" data-file="zoho">⚙️ run_pipeline.py</div>
+          <div class="tree-item tree-indent tab-trigger" data-file="resume">📜 resume.txt</div>
+          <div class="tree-item tree-indent tab-trigger" data-file="raytracer">⚙️ yolo_detector.cpp</div>
+          <div class="tree-item tree-indent tab-trigger" data-file="contact">✉️ contact.json</div>
+        </div>
+      </div>
+
+      <!-- VS Code Editor Tab Area -->
+      <div class="vscode-editor-area">
+        <div class="vscode-tabs-bar">
+          <div class="vscode-tab active" id="vsc-tab-label"><span>📄 README.md</span> <span
+              class="tab-close-icon">✕</span></div>
+        </div>
+        <div class="vscode-code-content" id="vsc-code-content">
+          <!-- Rendered syntax highlighted code or markdown -->
+        </div>
+      </div>
+    </div>
+    <div class="resize-handle nw"></div>
+    <div class="resize-handle ne"></div>
+    <div class="resize-handle sw"></div>
+    <div class="resize-handle se"></div>
+  </div>
+
+  <!-- 9. PORTFOLIO BROWSER / CONTACT WINDOW -->
+  <div class="window closed minimized" id="win-contact" style="top: 100px; left: 260px; width: 620px; height: 440px;">
+    <div class="window-titlebar">
+      <div class="titlebar-info">
+        <span class="titlebar-icon">🌐</span>
+        <span class="titlebar-title">Portfolio Browser — Contact Seung Sik (Daniel) Lee</span>
+      </div>
+      <div class="window-controls">
+        <button class="win-btn btn-min">_</button><button class="win-btn btn-max">□</button><button
+          class="win-btn btn-close">✕</button>
+      </div>
+    </div>
+    <div class="window-body">
+      <div class="xp-inset-box">
+        <h2 style="color: #003399;">Connect with Seung Sik (Daniel) Lee</h2>
+        <div class="card-grid" style="grid-template-columns: 1fr; margin-top: 14px;">
+          <div class="content-card">
+            <p><strong>📞 Phone:</strong> +1 (858) 209-8444</p>
+            <p style="margin-top: 10px;"><strong>✉️ Email:</strong> <a href="mailto:seungsik.daniel.lee@gmail.com"
+                style="color: #003399; font-weight: bold;">seungsik.daniel.lee@gmail.com</a></p>
+            <p style="margin-top: 10px;"><strong>💼 LinkedIn:</strong> <a href="https://linkedin.com/in/ssiklee"
+                target="_blank" style="color: #003399; font-weight: bold;">linkedin.com/in/ssiklee</a></p>
+            <p style="margin-top: 10px;"><strong>📍 Location:</strong> College Station, TX</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="resize-handle nw"></div>
+    <div class="resize-handle ne"></div>
+    <div class="resize-handle sw"></div>
+    <div class="resize-handle se"></div>
+  </div>
+
+  <!-- 10. POWERSHELL TERMINAL WINDOW -->
+  <div class="window closed minimized" id="win-terminal" style="top: 40px; left: 160px; width: 900px; height: 580px;">
+    <div class="window-titlebar">
+      <div class="titlebar-info">
+        <span class="titlebar-icon">⚡</span>
+        <span class="titlebar-title">Windows PowerShell — Daniel Lee [C:\Users\DanielLee]</span>
+      </div>
+      <div class="window-controls">
+        <button class="win-btn btn-min">_</button><button class="win-btn btn-max">□</button><button
+          class="win-btn btn-close">✕</button>
+      </div>
+    </div>
+    <iframe id="terminal-iframe" src="pages/home.html" class="terminal-iframe"
+      title="Windows PowerShell — Daniel Lee Portfolio Terminal" allowfullscreen loading="lazy"></iframe>
+    <div class="resize-handle nw"></div>
+    <div class="resize-handle ne"></div>
+    <div class="resize-handle sw"></div>
+    <div class="resize-handle se"></div>
+  </div>
+
+  <!-- 11. CONTROL PANEL WINDOW -->
+  <div class="window closed minimized" id="win-settings" style="top: 90px; left: 340px; width: 700px; height: 480px;">
+    <div class="window-titlebar">
+      <div class="titlebar-info">
+        <span class="titlebar-icon">⚙️</span>
+        <span class="titlebar-title">Control Panel — System Properties</span>
+      </div>
+      <div class="window-controls">
+        <button class="win-btn btn-min">_</button><button class="win-btn btn-max">□</button><button
+          class="win-btn btn-close">✕</button>
+      </div>
+    </div>
+    <div class="window-body">
+      <div class="xp-inset-box">
+        <h2 style="color: #003399;">DanielOS Control Panel</h2>
+        <div class="content-card" style="margin-top: 12px;">
+          <h3>System Properties</h3>
+          <ul style="list-style: none; display: flex; flex-direction: column; gap: 8px; font-size: 11px;">
+            <li><strong>System:</strong> DanielOS Professional [v2.3]</li>
+            <li><strong>Developer:</strong> Seung Sik (Daniel) Lee — Computer Engineer @ TAMU</li>
+            <li><strong>Current Role:</strong> Software Systems Engineering Technician @ US Modules</li>
+            <li><strong>Theme:</strong> XP Luna Blue / Low-Poly Landscape</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="resize-handle nw"></div>
+    <div class="resize-handle ne"></div>
+    <div class="resize-handle sw"></div>
+    <div class="resize-handle se"></div>
+  </div>
+
+  <!-- 12. WINVER DIALOG WINDOW -->
+  <div class="window closed minimized" id="win-winver"
+    style="top: 140px; left: 260px; width: 440px; height: 320px; z-index: 900;">
+    <div class="window-titlebar">
+      <div class="titlebar-info">
+        <span class="titlebar-icon">⚙️</span>
+        <span class="titlebar-title">About DanielOS</span>
+      </div>
+      <div class="window-controls">
+        <button class="win-btn btn-close">✕</button>
+      </div>
+    </div>
+    <div class="window-body">
+      <div class="xp-inset-box" style="text-align: center;">
+        <h2 style="color: #003399; font-size: 18px;">DanielOS Professional</h2>
+        <p style="margin-top: 4px; font-weight: bold;">Version 2.3 (Build 2600.xpsp_sp3)</p>
+        <p style="margin-top: 8px; color: #555;">Inspired by Windows XP • Seung Sik (Daniel) Lee Portfolio</p>
+        <p style="margin-top: 12px; font-size: 10px; color: #777;">(c) 2026 Seung Sik Lee. B.S. Computer Engineering @
+          Texas A&amp;M University.</p>
+        <button class="action-btn" id="winver-ok-btn" style="margin-top: 16px; padding: 4px 20px;">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 13. RECYCLE BIN WINDOW -->
+  <div class="window closed minimized" id="win-trash" style="top: 120px; left: 320px; width: 540px; height: 380px;">
+    <div class="window-titlebar">
+      <div class="titlebar-info">
+        <span class="titlebar-icon">🗑️</span>
+        <span class="titlebar-title">Recycle Bin</span>
+      </div>
+      <div class="window-controls">
+        <button class="win-btn btn-min">_</button><button class="win-btn btn-max">□</button><button
+          class="win-btn btn-close">✕</button>
+      </div>
+    </div>
+    <div class="window-body">
+      <div class="xp-inset-box">
+        <h2 style="color: #003399;">Recycle Bin</h2>
+        <ul style="list-style: none; margin-top: 12px; display: flex; flex-direction: column; gap: 8px;">
+          <li style="display: flex; align-items: center; gap: 8px;">📄 <span>old_boring_portfolio_v1.html</span></li>
+          <li style="display: flex; align-items: center; gap: 8px;">🐛 <span>null_pointer_exception.log</span></li>
+          <li style="display: flex; align-items: center; gap: 8px;">☕ <span>empty_coffee_cup.obj</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="resize-handle nw"></div>
+    <div class="resize-handle ne"></div>
+    <div class="resize-handle sw"></div>
+    <div class="resize-handle se"></div>
+  </div>
+
+  </div>
+
+  </main>
+
+  <!-- START MENU -->
+  <div class="start-menu" id="start-menu">
+    <div class="start-menu-header">
+      <div class="user-avatar">SL</div>
+      <span class="user-name">Seung Sik (Daniel) Lee</span>
+    </div>
+
+    <div class="start-menu-columns">
+      <div class="start-column-left">
+        <div class="start-item" data-window="win-resume"><span class="start-item-icon">📜</span><span
+            class="start-item-text">Resume.pdf</span></div>
+        <div class="start-item" data-window="win-vscode"><span class="start-item-icon">📝</span><span
+            class="start-item-text">VS Code Editor</span></div>
+        <div class="start-item" data-window="win-contact"><span class="start-item-icon">🌐</span><span
+            class="start-item-text">Portfolio Browser</span></div>
+        <div class="start-divider"></div>
+        <div class="start-item" data-window="win-about"><span class="start-item-icon">👤</span><span
+            class="start-item-text">About Daniel</span></div>
+        <div class="start-item" data-window="win-projects"><span class="start-item-icon">📂</span><span
+            class="start-item-text">Projects Explorer</span></div>
+        <div class="start-item" data-window="win-terminal"><span class="start-item-icon">⚡</span><span
+            class="start-item-text">PowerShell Terminal</span></div>
+      </div>
+
+      <div class="start-column-right">
+        <div class="start-item" data-window="win-winver"><span class="start-item-icon">⚙️</span><span
+            class="start-item-text">About DanielOS</span></div>
+        <div class="start-item" data-window="win-settings"><span class="start-item-icon">🛠️</span><span
+            class="start-item-text">Control Panel</span></div>
+      </div>
+    </div>
+
+    <div class="start-menu-footer">
+      <button class="xp-footer-btn" id="start-power-btn"><span>⏻</span> <span>Turn Off Computer</span></button>
+    </div>
+  </div>
+
+  <!-- MAIN DANIELOS TASKBAR -->
+  <footer class="taskbar" id="taskbar">
+    <div class="taskbar-left">
+      <button class="start-button" id="start-button">
+        <img src="images/logos/windows-xp.webp" class="start-logo-img" alt="Windows XP Logo" />
+        <span class="start-text-label">start</span>
+      </button>
+    </div>
+
+    <div class="taskbar-apps" id="taskbar-apps"></div>
+
+    <div class="system-tray">
+      <span class="tray-icon" title="Network Connected">📶</span>
+      <span class="tray-icon" title="Volume: 100%">🔊</span>
+      <div class="clock-display" id="clock-display"><span id="clock-time">10:37 AM</span></div>
+    </div>
+  </footer>
+
+  </div>
+</body>
+
 </html>
