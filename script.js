@@ -958,4 +958,15 @@ LinkedIn: linkedin.com/in/ssiklee
     // Small delay before starting so the fade-in completes first
     setTimeout(nextStep, 500);
   });
+
+  // Muhan Maesu App Refresh Toolbar Handler
+  const muhanRefreshBtn = document.getElementById('muhan-maesu-refresh-btn');
+  const muhanIframe = document.getElementById('muhan-maesu-iframe');
+  if (muhanRefreshBtn && muhanIframe) {
+    muhanRefreshBtn.addEventListener('click', () => {
+      muhanIframe.src = 'https://muhan-maesu.onrender.com/';
+      playSound('click');
+    });
+  }
 });
+

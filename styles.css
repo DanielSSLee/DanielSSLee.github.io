@@ -1107,3 +1107,78 @@ code {
   margin-bottom: -1px;
   background: #ffffff;
 }
+
+/* Web Browser Toolbar inside App Windows */
+.web-browser-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  background: linear-gradient(180deg, #ece9d8 0%, #e0dac3 100%);
+  border-bottom: 1px solid #7f9db9;
+  font-size: 11px;
+}
+
+.toolbar-nav-buttons {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.toolbar-address-box {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #ffffff;
+  border: 1px solid #7f9db9;
+  border-radius: 2px;
+  padding: 2px 8px;
+  box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.15);
+}
+
+.address-lock-icon {
+  font-size: 12px;
+}
+
+.address-input {
+  width: 100%;
+  border: none;
+  outline: none;
+  font-family: inherit;
+  font-size: 11px;
+  color: #003399;
+  font-weight: 500;
+  background: transparent;
+}
+
+.toolbar-status-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(0, 230, 118, 0.15);
+  color: #1b5e20;
+  border: 1px solid #a5d6a7;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-weight: bold;
+  font-size: 10.5px;
+  white-space: nowrap;
+}
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+  background-color: #00c853;
+  border-radius: 50%;
+  box-shadow: 0 0 6px #00c853;
+  display: inline-block;
+  animation: statusPulse 2s infinite;
+}
+
+@keyframes statusPulse {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  50% { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(0.95); opacity: 0.8; }
+}
+

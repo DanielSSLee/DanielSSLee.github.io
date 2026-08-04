@@ -188,6 +188,28 @@
           <span class="icon-label">Recycle Bin</span>
         </div>
 
+        <!-- Shortcut 9: Muhan Maesu (Alpaca Trading Bot) -->
+        <div class="desktop-icon" id="icon-muhan-maesu" data-window="win-muhan-maesu" style="top: 16px; left: 208px;">
+          <div class="icon-img-box">
+            <svg width="40" height="40" viewBox="0 0 64 64" fill="none">
+              <rect width="64" height="64" rx="10" fill="url(#trading-grad)" />
+              <path d="M12 44L24 32L34 40L52 18" stroke="#00FF87" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M42 18H52V28" stroke="#00FF87" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+              <circle cx="24" cy="32" r="3" fill="#60EFFF" />
+              <circle cx="34" cy="40" r="3" fill="#60EFFF" />
+              <circle cx="52" cy="18" r="4" fill="#00FF87" />
+              <defs>
+                <linearGradient id="trading-grad" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#0F2027"/>
+                  <stop offset="0.5" stop-color="#203A43"/>
+                  <stop offset="1" stop-color="#2C5364"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <span class="icon-label">Muhan Maesu</span>
+        </div>
+
       </div>
 
       <!-- WINDOWS CONTAINER (Draggable Windows) -->
@@ -351,6 +373,18 @@
                     </svg>
                   </div>
                   <span class="explorer-folder-label">📁 Restaurant Dashboard</span>
+                </div>
+
+                <div class="explorer-folder-item" data-open-win="win-muhan-maesu">
+                  <div class="explorer-folder-icon">
+                    <svg width="42" height="42" viewBox="0 0 64 64" fill="none">
+                      <path
+                        d="M6 16C6 12.6863 8.68629 10 12 10H24L30 18H52C55.3137 18 58 20.6863 58 24V50C58 53.3137 55.3137 56 52 56H12C8.68629 56 6 53.3137 6 50V16Z"
+                        fill="#00E676" />
+                      <path d="M10 24H54L50 52H14L10 24Z" fill="#B9F6CA" stroke="#00C853" stroke-width="1.5" />
+                    </svg>
+                  </div>
+                  <span class="explorer-folder-label">📁 Muhan Maesu Trading</span>
                 </div>
 
               </div>
@@ -934,6 +968,51 @@
     <div class="resize-handle se"></div>
   </div>
 
+  <!-- 14. MUHAN MAESU TRADING APP WINDOW -->
+  <div class="window closed minimized" id="win-muhan-maesu" style="top: 40px; left: 140px; width: 980px; height: 620px;">
+    <div class="window-titlebar" style="background: linear-gradient(180deg, #004080 0%, #002b55 100%);">
+      <div class="titlebar-info">
+        <span class="titlebar-icon">📈</span>
+        <span class="titlebar-title">Muhan Maesu — Quantitative Alpaca Trading Platform (https://muhan-maesu.onrender.com)</span>
+      </div>
+      <div class="window-controls">
+        <button class="win-btn btn-min" title="Minimize">_</button>
+        <button class="win-btn btn-max" title="Maximize">□</button>
+        <button class="win-btn btn-close" title="Close">✕</button>
+      </div>
+    </div>
+    
+    <div class="web-browser-toolbar">
+      <div class="toolbar-nav-buttons">
+        <button class="action-btn" id="muhan-maesu-refresh-btn" title="Refresh App">🔄 Refresh</button>
+        <a class="action-btn" href="https://muhan-maesu.onrender.com/" target="_blank" rel="noopener noreferrer" title="Open in External Browser Tab" style="text-decoration: none; color: inherit; display: inline-flex; align-items: center; gap: 4px;">
+          <span>↗️ Open External</span>
+        </a>
+      </div>
+      <div class="toolbar-address-box">
+        <span class="address-lock-icon">🔒</span>
+        <input type="text" readonly value="https://muhan-maesu.onrender.com/" class="address-input" />
+      </div>
+      <div class="toolbar-status-badge">
+        <span class="status-dot"></span> Alpaca Live Trading Ready
+      </div>
+    </div>
+
+    <div class="window-body" style="padding: 0; display: flex; flex-direction: column; overflow: hidden; background: #0e1117;">
+      <iframe id="muhan-maesu-iframe" src="https://muhan-maesu.onrender.com/" class="app-iframe"
+        title="Muhan Maesu Alpaca Trading App" allow="clipboard-write; clipboard-read; autoplay" loading="lazy" style="flex: 1; width: 100%; border: none;"></iframe>
+    </div>
+
+    <div class="resize-handle nw"></div>
+    <div class="resize-handle ne"></div>
+    <div class="resize-handle sw"></div>
+    <div class="resize-handle se"></div>
+    <div class="resize-handle n"></div>
+    <div class="resize-handle s"></div>
+    <div class="resize-handle e"></div>
+    <div class="resize-handle w"></div>
+  </div>
+
   </div>
 
   </main>
@@ -960,6 +1039,8 @@
             class="start-item-text">Projects Explorer</span></div>
         <div class="start-item" data-window="win-terminal"><span class="start-item-icon">⚡</span><span
             class="start-item-text">PowerShell Terminal</span></div>
+        <div class="start-item" data-window="win-muhan-maesu"><span class="start-item-icon">📈</span><span
+            class="start-item-text">Muhan Maesu Trading</span></div>
       </div>
 
       <div class="start-column-right">
