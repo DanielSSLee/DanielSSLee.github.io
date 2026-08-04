@@ -19,18 +19,22 @@ window.completeBootGlobal = function() {
 
 document.addEventListener('DOMContentLoaded', () => {
   let highestZIndex = 500;
+  let systemVolume = 0.8;
+  let isSystemMuted = false;
 
   // Web Audio API Synthesizer for XP Sounds
   function playSound(type = 'click') {
+    if (isSystemMuted || systemVolume <= 0) return;
     try {
       const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
+      const volMultiplier = systemVolume / 0.8;
 
       if (type === 'click') {
         osc.type = 'sine';
         osc.frequency.setValueAtTime(587.33, audioCtx.currentTime);
-        gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.04 * volMultiplier, audioCtx.currentTime);
         osc.connect(gain);
         gain.connect(audioCtx.destination);
         osc.start();
@@ -39,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
         osc.type = 'sine';
         osc.frequency.setValueAtTime(523.25, audioCtx.currentTime);
         osc.frequency.exponentialRampToValueAtTime(659.25, audioCtx.currentTime + 0.1);
-        gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.05 * volMultiplier, audioCtx.currentTime);
         osc.connect(gain);
         gain.connect(audioCtx.destination);
         osc.start();
@@ -48,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
         osc.type = 'sine';
         osc.frequency.setValueAtTime(440, audioCtx.currentTime);
         osc.frequency.exponentialRampToValueAtTime(329.63, audioCtx.currentTime + 0.1);
-        gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.04 * volMultiplier, audioCtx.currentTime);
         osc.connect(gain);
         gain.connect(audioCtx.destination);
         osc.start();
@@ -154,6 +158,8 @@ document.addEventListener('DOMContentLoaded', () => {
     playSound('click');
   }
 
+  const handleDirections = ['n', 's', 'e', 'w', 'nw', 'ne', 'sw', 'se'];
+
   windows.forEach(win => {
     win.addEventListener('mousedown', () => bringToFront(win));
     win.addEventListener('touchstart', () => bringToFront(win), { passive: true });
@@ -188,6 +194,91 @@ document.addEventListener('DOMContentLoaded', () => {
 
       document.addEventListener('mouseup', () => { isDragging = false; });
     }
+
+    // 8-Direction Window Resizer
+    handleDirections.forEach(dir => {
+      let handle = win.querySelector(`.resize-handle.${dir}`);
+      if (!handle) {
+        handle = document.createElement('div');
+        handle.className = `resize-handle ${dir}`;
+        win.appendChild(handle);
+      }
+
+      let isResizing = false;
+      let startX = 0, startY = 0;
+      let startW = 0, startH = 0;
+      let startL = 0, startT = 0;
+
+      const startResize = (e) => {
+        if (win.classList.contains('maximized')) return;
+        e.stopPropagation();
+        e.preventDefault();
+        isResizing = true;
+        bringToFront(win);
+
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+        startX = clientX;
+        startY = clientY;
+        startW = win.offsetWidth;
+        startH = win.offsetHeight;
+        startL = win.offsetLeft;
+        startT = win.offsetTop;
+
+        const onMove = (moveEvt) => {
+          if (!isResizing) return;
+          const curX = moveEvt.touches ? moveEvt.touches[0].clientX : moveEvt.clientX;
+          const curY = moveEvt.touches ? moveEvt.touches[0].clientY : moveEvt.clientY;
+          const dx = curX - startX;
+          const dy = curY - startY;
+
+          const minW = 320;
+          const minH = 200;
+
+          let newW = startW;
+          let newH = startH;
+          let newL = startL;
+          let newT = startT;
+
+          if (dir.includes('e')) {
+            newW = Math.max(minW, startW + dx);
+          }
+          if (dir.includes('s')) {
+            newH = Math.max(minH, startH + dy);
+          }
+          if (dir.includes('w')) {
+            newW = Math.max(minW, startW - dx);
+            if (newW > minW) newL = startL + dx;
+          }
+          if (dir.includes('n')) {
+            newH = Math.max(minH, startH - dy);
+            if (newH > minH) newT = startT + dy;
+          }
+
+          win.style.width = `${newW}px`;
+          win.style.height = `${newH}px`;
+          win.style.left = `${Math.max(0, newL)}px`;
+          win.style.top = `${Math.max(0, newT)}px`;
+        };
+
+        const stopResize = () => {
+          isResizing = false;
+          document.removeEventListener('mousemove', onMove);
+          document.removeEventListener('mouseup', stopResize);
+          document.removeEventListener('touchmove', onMove);
+          document.removeEventListener('touchend', stopResize);
+        };
+
+        document.addEventListener('mousemove', onMove);
+        document.addEventListener('mouseup', stopResize);
+        document.addEventListener('touchmove', onMove, { passive: false });
+        document.addEventListener('touchend', stopResize);
+      };
+
+      handle.addEventListener('mousedown', startResize);
+      handle.addEventListener('touchstart', startResize, { passive: false });
+    });
   });
 
 
@@ -497,11 +588,202 @@ KW Internationals — Data Analytics Intern [May 2025 – July 2025]
     });
   }
 
-  // Digital Clock
-  function updateClock() {
-    const clockTime = document.getElementById('clock-time');
-    if (clockTime) clockTime.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  // ------------------------------------------------------------------------
+  // 7b. SYSTEM TRAY ENGINE (CLOCK/CALENDAR, VOLUME SLIDER, NETWORK STATUS)
+  // ------------------------------------------------------------------------
+  const trayVolumeBtn = document.getElementById('tray-volume-btn');
+  const trayVolumePopup = document.getElementById('tray-volume-popup');
+  const trayVolSlider = document.getElementById('tray-vol-slider');
+  const trayVolLabel = document.getElementById('tray-vol-label');
+  const trayVolMute = document.getElementById('tray-vol-mute');
+
+  const trayClockBtn = document.getElementById('tray-clock-btn');
+  const winDatetime = document.getElementById('win-datetime');
+  const datetimeOkBtn = document.getElementById('datetime-ok-btn');
+  const calPrevBtn = document.getElementById('cal-prev-btn');
+  const calNextBtn = document.getElementById('cal-next-btn');
+  const calMonthYearLabel = document.getElementById('cal-month-year-label');
+  const calendarDaysBody = document.getElementById('calendar-days-body');
+
+  const trayNetworkBtn = document.getElementById('tray-network-btn');
+  const winNetwork = document.getElementById('win-network');
+  const networkCloseBtn = document.getElementById('network-close-btn');
+
+  // Master Volume Controls
+  if (trayVolumeBtn && trayVolumePopup) {
+    trayVolumeBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      trayVolumePopup.classList.toggle('open');
+      playSound('click');
+    });
+
+    if (trayVolSlider) {
+      trayVolSlider.addEventListener('input', (e) => {
+        const val = parseInt(e.target.value, 10);
+        systemVolume = val / 100;
+        if (trayVolLabel) trayVolLabel.textContent = `${val}%`;
+        if (trayVolMute && trayVolMute.checked) {
+          trayVolMute.checked = false;
+          isSystemMuted = false;
+        }
+        updateVolumeIcon();
+        playSound('click');
+      });
+    }
+
+    if (trayVolMute) {
+      trayVolMute.addEventListener('change', (e) => {
+        isSystemMuted = e.target.checked;
+        updateVolumeIcon();
+        playSound('click');
+      });
+    }
+
+    function updateVolumeIcon() {
+      if (!trayVolumeBtn) return;
+      if (isSystemMuted || systemVolume === 0) {
+        trayVolumeBtn.textContent = '🔇';
+        trayVolumeBtn.title = 'Volume: Muted';
+      } else if (systemVolume > 0.5) {
+        trayVolumeBtn.textContent = '🔊';
+        trayVolumeBtn.title = `Volume: ${Math.round(systemVolume * 100)}%`;
+      } else {
+        trayVolumeBtn.textContent = '🔉';
+        trayVolumeBtn.title = `Volume: ${Math.round(systemVolume * 100)}%`;
+      }
+    }
   }
+
+  // Dismiss Tray Popups on Outside Click
+  document.addEventListener('click', (e) => {
+    if (trayVolumePopup && !trayVolumePopup.contains(e.target) && e.target !== trayVolumeBtn) {
+      trayVolumePopup.classList.remove('open');
+    }
+  });
+
+  // Date and Time Dialog Engine
+  let calCurrentDate = new Date();
+
+  function renderCalendar(date) {
+    if (!calMonthYearLabel || !calendarDaysBody) return;
+    const year = date.getFullYear();
+    const month = date.getMonth();
+
+    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                        'July', 'August', 'September', 'October', 'November', 'December'];
+    calMonthYearLabel.textContent = `${monthNames[month]} ${year}`;
+
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const daysInPrevMonth = new Date(year, month, 0).getDate();
+
+    let html = '<tr>';
+    let dayCount = 1;
+    let nextMonthDay = 1;
+
+    for (let i = 0; i < 42; i++) {
+      if (i > 0 && i % 7 === 0) {
+        html += '</tr><tr>';
+      }
+
+      if (i < firstDay) {
+        const prevDay = daysInPrevMonth - (firstDay - 1 - i);
+        html += `<td class="other-month">${prevDay}</td>`;
+      } else if (dayCount <= daysInMonth) {
+        const now = new Date();
+        const isToday = dayCount === now.getDate() && month === now.getMonth() && year === now.getFullYear();
+        html += `<td class="${isToday ? 'today' : ''}">${dayCount}</td>`;
+        dayCount++;
+      } else {
+        html += `<td class="other-month">${nextMonthDay}</td>`;
+        nextMonthDay++;
+      }
+    }
+    html += '</tr>';
+    calendarDaysBody.innerHTML = html;
+  }
+
+  if (trayClockBtn) {
+    trayClockBtn.addEventListener('click', () => {
+      openWindow('win-datetime');
+      renderCalendar(calCurrentDate);
+    });
+  }
+
+  if (calPrevBtn) {
+    calPrevBtn.addEventListener('click', () => {
+      calCurrentDate.setMonth(calCurrentDate.getMonth() - 1);
+      renderCalendar(calCurrentDate);
+      playSound('click');
+    });
+  }
+
+  if (calNextBtn) {
+    calNextBtn.addEventListener('click', () => {
+      calCurrentDate.setMonth(calCurrentDate.getMonth() + 1);
+      renderCalendar(calCurrentDate);
+      playSound('click');
+    });
+  }
+
+  if (datetimeOkBtn && winDatetime) {
+    datetimeOkBtn.addEventListener('click', () => {
+      closeWindow(winDatetime);
+    });
+  }
+
+  // Network Status Window Engine
+  if (trayNetworkBtn) {
+    trayNetworkBtn.addEventListener('click', () => {
+      openWindow('win-network');
+    });
+  }
+
+  if (networkCloseBtn && winNetwork) {
+    networkCloseBtn.addEventListener('click', () => {
+      closeWindow(winNetwork);
+    });
+  }
+
+  // Dynamic Ticker for Network & Digital/Analog Clock
+  let sentPackets = 14280;
+  let recvPackets = 48920;
+
+  function updateClock() {
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const fullTimeStr = now.toLocaleTimeString();
+
+    const clockTime = document.getElementById('clock-time');
+    if (clockTime) clockTime.textContent = timeStr;
+
+    const digitalClockDialog = document.getElementById('digital-clock-dialog');
+    if (digitalClockDialog) digitalClockDialog.textContent = fullTimeStr;
+
+    // Analog clock hands
+    const seconds = now.getSeconds();
+    const minutes = now.getMinutes();
+    const hours = now.getHours();
+
+    const handSecond = document.getElementById('hand-second');
+    const handMinute = document.getElementById('hand-minute');
+    const handHour = document.getElementById('hand-hour');
+
+    if (handSecond) handSecond.style.transform = `rotate(${seconds * 6}deg)`;
+    if (handMinute) handMinute.style.transform = `rotate(${minutes * 6 + seconds * 0.1}deg)`;
+    if (handHour) handHour.style.transform = `rotate(${(hours % 12) * 30 + minutes * 0.5}deg)`;
+
+    // Network Activity Simulation
+    sentPackets += Math.floor(Math.random() * 45);
+    recvPackets += Math.floor(Math.random() * 120);
+
+    const netSent = document.getElementById('net-sent-pkts');
+    const netRecv = document.getElementById('net-recv-pkts');
+
+    if (netSent) netSent.textContent = sentPackets.toLocaleString();
+    if (netRecv) netRecv.textContent = recvPackets.toLocaleString();
+  }
+
   setInterval(updateClock, 1000);
   updateClock();
 

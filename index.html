@@ -553,12 +553,6 @@
           <div class="resize-handle se"></div>
         </div>
 
-        handle ne">
-      </div>
-      <div class="resize-handle sw"></div>
-      <div class="resize-handle se"></div>
-  </div>
-
   <!-- 4. NESTED PROJECT: ZOHO DATA AUTOMATION (DETAILED CODE & ARCHITECTURE) -->
   <div class="window closed minimized" id="win-project-zoho"
     style="top: 80px; left: 220px; width: 780px; height: 530px;">
@@ -992,12 +986,119 @@
 
     <div class="taskbar-apps" id="taskbar-apps"></div>
 
-    <div class="system-tray">
-      <span class="tray-icon" title="Network Connected">📶</span>
-      <span class="tray-icon" title="Volume: 100%">🔊</span>
-      <div class="clock-display" id="clock-display"><span id="clock-time">10:37 AM</span></div>
+    <div class="system-tray" id="system-tray">
+      <span class="tray-icon" id="tray-network-btn" title="Network Connected: 1.0 Gbps">📶</span>
+      <span class="tray-icon" id="tray-volume-btn" title="Volume: 80%">🔊</span>
+      <div class="clock-display" id="tray-clock-btn" title="Click for Date &amp; Time Properties"><span id="clock-time">10:37 AM</span></div>
     </div>
   </footer>
+
+  <!-- SYSTEM TRAY POPUPS -->
+  <!-- 1. Master Volume Popover -->
+  <div class="tray-popup tray-volume-popover" id="tray-volume-popup">
+    <div class="popover-title">Volume</div>
+    <div class="volume-slider-box">
+      <span class="vol-icon">🔊</span>
+      <input type="range" id="tray-vol-slider" min="0" max="100" value="80" class="volume-slider" />
+    </div>
+    <div class="vol-percentage" id="tray-vol-label">80%</div>
+    <label class="vol-mute-checkbox">
+      <input type="checkbox" id="tray-vol-mute" /> Mute
+    </label>
+  </div>
+
+  <!-- 2. Date & Time Properties Window -->
+  <div class="window closed minimized tray-window" id="win-datetime" style="top: 100px; left: 50%; transform: translateX(-50%); width: 440px; height: 380px; z-index: 9900;">
+    <div class="window-titlebar">
+      <div class="titlebar-info"><span class="titlebar-icon">🕒</span><span class="titlebar-title">Date and Time Properties</span></div>
+      <div class="window-controls"><button class="win-btn btn-close">✕</button></div>
+    </div>
+    <div class="window-body" style="padding: 12px; background: var(--xp-window-bg);">
+      <div class="xp-tab-container">
+        <div class="xp-tab-header"><div class="xp-tab active">Date &amp; Time</div></div>
+        <div class="xp-tab-body" style="display: flex; gap: 16px; padding: 12px; background: #fff; border: 1px solid #7f9db9; border-top: none;">
+          <div class="calendar-section" style="flex: 1;">
+            <div class="calendar-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <button class="action-btn" id="cal-prev-btn" style="padding: 1px 6px;">&lt;</button>
+              <strong id="cal-month-year-label" style="font-size: 12px; color: #003399;">August 2026</strong>
+              <button class="action-btn" id="cal-next-btn" style="padding: 1px 6px;">&gt;</button>
+            </div>
+            <table class="calendar-table" style="width: 100%; border-collapse: collapse; text-align: center; font-size: 11px;">
+              <thead>
+                <tr style="color: #555; font-weight: bold;">
+                  <td>S</td><td>M</td><td>T</td><td>W</td><td>T</td><td>F</td><td>S</td>
+                </tr>
+              </thead>
+              <tbody id="calendar-days-body"></tbody>
+            </table>
+          </div>
+          <div class="clock-section" style="width: 140px; display: flex; flex-direction: column; align-items: center; justify-content: center; border-left: 1px solid #e0e0e0; padding-left: 12px;">
+            <div class="analog-clock-circle" id="analog-clock" style="width: 90px; height: 90px; border: 3px solid #0053ee; border-radius: 50%; position: relative; background: #fdfdfd; margin-bottom: 8px;">
+              <div id="hand-hour" style="position: absolute; width: 4px; height: 26px; background: #000; top: 19px; left: 43px; transform-origin: bottom center;"></div>
+              <div id="hand-minute" style="position: absolute; width: 3px; height: 34px; background: #0053ee; top: 11px; left: 43.5px; transform-origin: bottom center;"></div>
+              <div id="hand-second" style="position: absolute; width: 1px; height: 38px; background: #e81123; top: 7px; left: 44.5px; transform-origin: bottom center;"></div>
+              <div style="position: absolute; width: 8px; height: 8px; background: #000; border-radius: 50%; top: 41px; left: 41px;"></div>
+            </div>
+            <div style="font-weight: bold; font-size: 12px; color: #003399;" id="digital-clock-dialog">10:37:00 AM</div>
+          </div>
+        </div>
+        <div style="margin-top: 10px; font-size: 11px; color: #555;">
+          Time Zone: <strong>(UTC-06:00) Central Time (US &amp; Canada)</strong>
+        </div>
+      </div>
+      <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px;">
+        <button class="action-btn" id="datetime-ok-btn" style="min-width: 70px;">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Local Area Connection Status Dialog -->
+  <div class="window closed minimized tray-window" id="win-network" style="top: 120px; left: 50%; transform: translateX(-50%); width: 380px; height: 340px; z-index: 9900;">
+    <div class="window-titlebar">
+      <div class="titlebar-info"><span class="titlebar-icon">📶</span><span class="titlebar-title">Local Area Connection Status</span></div>
+      <div class="window-controls"><button class="win-btn btn-close">✕</button></div>
+    </div>
+    <div class="window-body" style="padding: 12px; background: var(--xp-window-bg);">
+      <div class="xp-tab-container">
+        <div class="xp-tab-header"><div class="xp-tab active">General</div></div>
+        <div class="xp-tab-body" style="padding: 12px; background: #fff; border: 1px solid #7f9db9; border-top: none;">
+          <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 12px;">
+            <span style="font-size: 32px;">📶</span>
+            <div>
+              <div style="font-weight: bold; font-size: 12px; color: #003399;">DanielOS High-Speed Network</div>
+              <div style="color: #666; font-size: 10.5px;">Connected to Internet</div>
+            </div>
+          </div>
+          <fieldset style="border: 1px solid #b4d0f5; padding: 8px 12px; border-radius: 3px; font-size: 11px; margin-bottom: 10px;">
+            <legend style="color: #003399; font-weight: bold; padding: 0 4px;">Connection Status</legend>
+            <div style="display: grid; grid-template-columns: 100px 1fr; gap: 4px; font-size: 11px;">
+              <span>Status:</span><strong>Connected</strong>
+              <span>Duration:</span><strong id="net-duration">02:45:18</strong>
+              <span>Speed:</span><strong>1.0 Gbps (Gigabit Ethernet)</strong>
+              <span>IP Address:</span><strong>192.168.1.105 (DHCP)</strong>
+            </div>
+          </fieldset>
+          <fieldset style="border: 1px solid #b4d0f5; padding: 8px 12px; border-radius: 3px; font-size: 11px;">
+            <legend style="color: #003399; font-weight: bold; padding: 0 4px;">Activity</legend>
+            <div style="display: flex; justify-content: space-around; text-align: center;">
+              <div>
+                <div style="color: #555;">Sent</div>
+                <strong style="color: #2e7d32;" id="net-sent-pkts">14,280</strong> bytes
+              </div>
+              <div style="font-size: 18px;">⇄</div>
+              <div>
+                <div style="color: #555;">Received</div>
+                <strong style="color: #0053ee;" id="net-recv-pkts">48,920</strong> bytes
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+      <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px;">
+        <button class="action-btn" id="network-close-btn" style="min-width: 70px;">Close</button>
+      </div>
+    </div>
+  </div>
 
   </div>
 </body>
