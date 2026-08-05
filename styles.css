@@ -537,14 +537,25 @@ code {
 }
 
 .resize-handle { position: absolute; z-index: 10; touch-action: none; }
-.resize-handle.n { top: -3px; left: 8px; right: 8px; height: 6px; cursor: ns-resize; }
-.resize-handle.s { bottom: -3px; left: 8px; right: 8px; height: 6px; cursor: ns-resize; }
-.resize-handle.e { top: 8px; bottom: 8px; right: -3px; width: 6px; cursor: ew-resize; }
-.resize-handle.w { top: 8px; bottom: 8px; left: -3px; width: 6px; cursor: ew-resize; }
-.resize-handle.nw { top: -4px; left: -4px; width: 12px; height: 12px; cursor: nwse-resize; z-index: 11; }
-.resize-handle.ne { top: -4px; right: -4px; width: 12px; height: 12px; cursor: nesw-resize; z-index: 11; }
-.resize-handle.sw { bottom: -4px; left: -4px; width: 12px; height: 12px; cursor: nesw-resize; z-index: 11; }
-.resize-handle.se { bottom: -4px; right: -4px; width: 12px; height: 12px; cursor: nwse-resize; z-index: 11; }
+.resize-handle.n { top: -4px; left: 12px; right: 12px; height: 10px; cursor: ns-resize; }
+.resize-handle.s { bottom: -4px; left: 12px; right: 12px; height: 10px; cursor: ns-resize; }
+.resize-handle.e { top: 12px; bottom: 12px; right: -4px; width: 10px; cursor: ew-resize; }
+.resize-handle.w { top: 12px; bottom: 12px; left: -4px; width: 10px; cursor: ew-resize; }
+.resize-handle.nw { top: -6px; left: -6px; width: 18px; height: 18px; cursor: nwse-resize; z-index: 15; }
+.resize-handle.ne { top: -6px; right: -6px; width: 18px; height: 18px; cursor: nesw-resize; z-index: 15; }
+.resize-handle.sw { bottom: -6px; left: -6px; width: 22px; height: 22px; cursor: nesw-resize; z-index: 15; }
+.resize-handle.se { bottom: -6px; right: -6px; width: 24px; height: 24px; cursor: nwse-resize; z-index: 15; }
+.resize-handle.se::after {
+  content: '';
+  position: absolute;
+  right: 5px;
+  bottom: 5px;
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid #0053ee;
+  border-bottom: 2px solid #0053ee;
+  box-shadow: -1px -1px 0 #ffffff;
+}
 
 
 /* --------------------------------------------------------------------------
@@ -1181,4 +1192,326 @@ code {
   50% { transform: scale(1.15); opacity: 1; }
   100% { transform: scale(0.95); opacity: 0.8; }
 }
+
+/* ==========================================================================
+   12. MOBILE & SMALL SCREEN RESPONSIVE ENGINE (PORTRAIT & LANDSCAPE)
+   ========================================================================== */
+
+/* Touch Device Optimization */
+@media (pointer: coarse) {
+  .win-btn {
+    width: 26px !important;
+    height: 26px !important;
+    font-size: 13px !important;
+  }
+  .desktop-icon {
+    touch-action: none;
+  }
+  .window-titlebar {
+    touch-action: none;
+    height: 34px !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   A. VERTICAL MOBILE / PORTRAIT SCREENS (width <= 768px)
+   -------------------------------------------------------------------------- */
+@media screen and (max-width: 768px) {
+  :root {
+    --taskbar-height: 34px;
+  }
+
+  /* Desktop Viewport & Area */
+  .desktop-viewport {
+    height: 100vh;
+    height: 100dvh;
+  }
+
+  .desktop-area {
+    height: calc(100% - var(--taskbar-height));
+  }
+
+  /* Shortcut Icons scaling on mobile */
+  .desktop-icon {
+    width: 76px;
+    height: 82px;
+    padding: 3px;
+  }
+  .icon-img-box {
+    width: 36px;
+    height: 36px;
+  }
+  .icon-img-box svg {
+    width: 34px;
+    height: 34px;
+  }
+  .icon-label {
+    font-size: 10px;
+    line-height: 1.1;
+  }
+
+  /* Responsive Window Sizing (Default values without !important so drag & scale works smoothly) */
+  .window:not(.maximized) {
+    width: min(94vw, 760px);
+    max-width: 98vw;
+    height: auto;
+    max-height: calc(100dvh - var(--taskbar-height) - 16px);
+    border-radius: 6px;
+    min-width: 260px;
+  }
+
+  .window-titlebar {
+    height: 34px;
+    padding: 0 8px;
+  }
+
+  .titlebar-info {
+    font-size: 11px;
+    max-width: 70%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .window-controls {
+    gap: 4px;
+  }
+
+  .win-btn {
+    width: 25px;
+    height: 25px;
+    font-size: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .window-body {
+    padding: 6px;
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    max-height: calc(100dvh - var(--taskbar-height) - 65px);
+  }
+
+  .xp-inset-box {
+    padding: 8px;
+    box-sizing: border-box;
+    width: 100%;
+    overflow-x: hidden;
+    min-height: auto !important;
+    height: auto !important;
+  }
+
+  /* Grid Layouts Stack Vertically on Narrow Mobile */
+  .card-grid {
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+  }
+
+  .explorer-grid {
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)) !important;
+    gap: 8px !important;
+  }
+
+  .explorer-folder-item {
+    padding: 6px 4px;
+  }
+
+  .explorer-folder-label {
+    font-size: 10.5px;
+  }
+
+  /* Resume Paper Scaling */
+  .resume-paper {
+    padding: 12px 10px !important;
+    font-size: 10.5px !important;
+  }
+  .resume-header-title {
+    font-size: 18px !important;
+  }
+  .resume-header-contact {
+    font-size: 10px !important;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  /* VS Code Mobile Layout */
+  .vscode-window-body {
+    flex-direction: column !important;
+  }
+  .vscode-sidebar {
+    width: 100% !important;
+    max-height: 100px !important;
+    border-right: none !important;
+    border-bottom: 1px solid #2b2b2b !important;
+    padding: 4px 8px !important;
+    overflow-y: auto !important;
+  }
+  .vscode-file-tree {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 10px;
+  }
+  .tree-indent {
+    padding-left: 4px !important;
+  }
+  .vscode-code-content {
+    font-size: 10px !important;
+    padding: 8px !important;
+    overflow-x: auto !important;
+  }
+
+  /* App Web Browser Toolbar */
+  .web-browser-toolbar {
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 4px 6px;
+  }
+  .toolbar-nav-buttons {
+    gap: 4px;
+  }
+  .toolbar-address-box {
+    flex: 1 1 100%;
+    order: 3;
+    margin-top: 2px;
+  }
+  .toolbar-status-badge {
+    font-size: 9.5px;
+    padding: 1px 6px;
+  }
+
+  /* Start Menu Mobile Scaling */
+  .start-menu {
+    width: min(380px, 94vw) !important;
+    left: 3vw !important;
+    bottom: calc(var(--taskbar-height) + 2px) !important;
+    max-height: calc(100vh - var(--taskbar-height) - 8px) !important;
+  }
+
+  .start-menu-columns {
+    flex-direction: row;
+    overflow-y: auto;
+  }
+
+  /* Small Mobile Start Menu Stack */
+  @media screen and (max-width: 480px) {
+    .start-menu-columns {
+      flex-direction: column !important;
+    }
+    .start-column-right {
+      width: 100% !important;
+      border-left: none !important;
+      border-top: 1px solid #b4d0f5 !important;
+    }
+  }
+
+  /* Taskbar Mobile Scaling */
+  .start-button {
+    padding: 0 8px 0 6px;
+    font-size: 13px;
+  }
+  .start-logo-img {
+    height: 15px;
+  }
+  .taskbar-apps {
+    padding: 0 2px;
+    gap: 2px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .taskbar-app-btn {
+    min-width: 38px;
+    max-width: 95px;
+    padding: 0 4px;
+    font-size: 10px;
+  }
+  .system-tray {
+    padding: 0 6px;
+    gap: 4px;
+  }
+  .clock-display {
+    font-size: 10px;
+    padding: 2px 3px;
+  }
+
+  /* System Tray Windows & Popups on Mobile */
+  .tray-window {
+    width: 94vw !important;
+    max-width: 420px !important;
+    left: 3vw !important;
+    transform: none !important;
+    top: 10px !important;
+  }
+
+  .xp-tab-body {
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 12px !important;
+  }
+  .clock-section {
+    width: 100% !important;
+    border-left: none !important;
+    border-top: 1px solid #e0e0e0 !important;
+    padding-left: 0 !important;
+    padding-top: 10px !important;
+  }
+
+  .tray-volume-popover {
+    right: 4px !important;
+  }
+}
+
+
+/* --------------------------------------------------------------------------
+   B. HORIZONTAL MOBILE LANDSCAPE MODE (height <= 500px)
+   -------------------------------------------------------------------------- */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+  :root {
+    --taskbar-height: 28px;
+  }
+
+  .boot-logo-box {
+    margin-bottom: 16px;
+  }
+  .boot-title {
+    font-size: 24px;
+  }
+
+  .window:not(.maximized) {
+    top: 2px !important;
+    height: auto !important;
+    max-height: calc(100vh - var(--taskbar-height) - 4px) !important;
+  }
+
+  .window-titlebar {
+    height: 26px !important;
+  }
+
+  .window-body {
+    max-height: calc(100% - 26px) !important;
+    padding: 4px !important;
+  }
+
+  .start-menu {
+    max-height: calc(100vh - var(--taskbar-height) - 4px) !important;
+    height: auto !important;
+    bottom: calc(var(--taskbar-height) + 1px) !important;
+  }
+  .start-menu-header {
+    height: 42px;
+  }
+  .user-avatar {
+    width: 30px;
+    height: 30px;
+    font-size: 13px;
+  }
+
+  .tray-window {
+    top: 2px !important;
+    max-height: calc(100vh - var(--taskbar-height) - 4px) !important;
+  }
+}
+
 

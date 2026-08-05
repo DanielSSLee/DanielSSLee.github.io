@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function bringToFront(win) {
     if (!win) return;
-    highestZIndex += 1;
+    highestZIndex += 10;
     win.style.zIndex = highestZIndex;
     windows.forEach(w => w.classList.remove('active-window'));
     win.classList.add('active-window');
@@ -161,8 +161,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const handleDirections = ['n', 's', 'e', 'w', 'nw', 'ne', 'sw', 'se'];
 
   windows.forEach(win => {
+    // Bring window to top of layers whenever touched or clicked
     win.addEventListener('mousedown', () => bringToFront(win));
     win.addEventListener('touchstart', () => bringToFront(win), { passive: true });
+    win.addEventListener('pointerdown', () => bringToFront(win), { passive: true });
 
     const titlebar = win.querySelector('.window-titlebar');
     const btnMin = win.querySelector('.btn-min');
@@ -177,25 +179,52 @@ document.addEventListener('DOMContentLoaded', () => {
     let dragOffsetX = 0;
     let dragOffsetY = 0;
 
+    // Move window by dragging from the top side (titlebar)
     if (titlebar) {
-      titlebar.addEventListener('mousedown', (e) => {
-        if (e.target.classList.contains('win-btn')) return;
-        isDragging = true;
-        dragOffsetX = e.clientX - win.offsetLeft;
-        dragOffsetY = e.clientY - win.offsetTop;
+      const startWindowDrag = (e) => {
+        if (e.target.classList.contains('win-btn') || win.classList.contains('maximized')) return;
         bringToFront(win);
-      });
+        isDragging = true;
 
-      document.addEventListener('mousemove', (e) => {
+        // Freeze rendered inline left/top if relying on CSS fallback defaults
+        if (!win.style.left || win.style.left === '') {
+          win.style.left = `${win.offsetLeft}px`;
+        }
+        if (!win.style.top || win.style.top === '') {
+          win.style.top = `${win.offsetTop}px`;
+        }
+
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        dragOffsetX = clientX - win.offsetLeft;
+        dragOffsetY = clientY - win.offsetTop;
+      };
+
+      const moveWindowDrag = (e) => {
         if (!isDragging || win.classList.contains('maximized')) return;
-        win.style.left = `${Math.max(0, e.clientX - dragOffsetX)}px`;
-        win.style.top = `${Math.max(0, e.clientY - dragOffsetY)}px`;
-      });
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        const maxLeft = Math.max(0, window.innerWidth - win.offsetWidth);
+        const maxTop = Math.max(0, window.innerHeight - 34 - win.offsetHeight);
+        const newLeft = Math.min(maxLeft, Math.max(0, clientX - dragOffsetX));
+        const newTop = Math.min(maxTop, Math.max(0, clientY - dragOffsetY));
+        win.style.left = `${newLeft}px`;
+        win.style.top = `${newTop}px`;
+      };
 
-      document.addEventListener('mouseup', () => { isDragging = false; });
+      const stopWindowDrag = () => { isDragging = false; };
+
+      titlebar.addEventListener('mousedown', startWindowDrag);
+      titlebar.addEventListener('touchstart', startWindowDrag, { passive: true });
+
+      document.addEventListener('mousemove', moveWindowDrag);
+      document.addEventListener('touchmove', moveWindowDrag, { passive: true });
+
+      document.addEventListener('mouseup', stopWindowDrag);
+      document.addEventListener('touchend', stopWindowDrag);
     }
 
-    // 8-Direction Window Resizer
+    // Scale / Resize window by dragging handles (including bottom corners sw and se)
     handleDirections.forEach(dir => {
       let handle = win.querySelector(`.resize-handle.${dir}`);
       if (!handle) {
@@ -212,9 +241,12 @@ document.addEventListener('DOMContentLoaded', () => {
       const startResize = (e) => {
         if (win.classList.contains('maximized')) return;
         e.stopPropagation();
-        e.preventDefault();
-        isResizing = true;
         bringToFront(win);
+        isResizing = true;
+
+        // Clear max constraints during manual corner scaling
+        win.style.maxWidth = 'none';
+        win.style.maxHeight = 'none';
 
         const clientX = e.touches ? e.touches[0].clientX : e.clientX;
         const clientY = e.touches ? e.touches[0].clientY : e.clientY;
@@ -233,8 +265,8 @@ document.addEventListener('DOMContentLoaded', () => {
           const dx = curX - startX;
           const dy = curY - startY;
 
-          const minW = 320;
-          const minH = 200;
+          const minW = Math.min(240, window.innerWidth - 20);
+          const minH = 160;
 
           let newW = startW;
           let newH = startH;
@@ -255,6 +287,10 @@ document.addEventListener('DOMContentLoaded', () => {
             newH = Math.max(minH, startH - dy);
             if (newH > minH) newT = startT + dy;
           }
+
+          // Boundary limit against screen viewport
+          newW = Math.min(window.innerWidth - newL, newW);
+          newH = Math.min(window.innerHeight - 34 - newT, newH);
 
           win.style.width = `${newW}px`;
           win.style.height = `${newH}px`;
@@ -281,9 +317,31 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // Clamp window positions on resize & orientation change
+  function clampWindowPositions() {
+    windows.forEach(win => {
+      if (win.classList.contains('closed') || win.classList.contains('maximized')) return;
+      const maxLeft = Math.max(0, window.innerWidth - win.offsetWidth);
+      const maxTop = Math.max(0, window.innerHeight - 34 - win.offsetHeight);
+      if (win.style.left && win.style.left !== '') {
+        const curLeft = parseFloat(win.style.left) || 0;
+        if (curLeft > maxLeft) win.style.left = `${maxLeft}px`;
+      }
+      if (win.style.top && win.style.top !== '') {
+        const curTop = parseFloat(win.style.top) || 0;
+        if (curTop > maxTop) win.style.top = `${maxTop}px`;
+      }
+    });
+  }
+
+  window.addEventListener('resize', clampWindowPositions);
+  window.addEventListener('orientationchange', () => {
+    setTimeout(clampWindowPositions, 250);
+  });
+
 
   // ------------------------------------------------------------------------
-  // 3. DRAGGABLE DESKTOP ICONS (ALIGN TO GRID ENGINE)
+  // 3. DRAGGABLE & TOUCH-ENABLED DESKTOP ICONS (ALIGN TO GRID ENGINE)
   // ------------------------------------------------------------------------
   const desktopIcons = document.querySelectorAll('.desktop-icon');
   const GRID_X = 96;
@@ -295,24 +353,38 @@ document.addEventListener('DOMContentLoaded', () => {
     let isDraggingIcon = false;
     let iconOffsetX = 0;
     let iconOffsetY = 0;
+    let touchStartTime = 0;
+    let touchMoved = false;
 
-    icon.addEventListener('mousedown', (e) => {
+    const startIconDrag = (e) => {
       desktopIcons.forEach(i => i.classList.remove('selected'));
       icon.classList.add('selected');
       icon.classList.add('dragging');
       isDraggingIcon = true;
-      iconOffsetX = e.clientX - icon.offsetLeft;
-      iconOffsetY = e.clientY - icon.offsetTop;
+      touchMoved = false;
+      touchStartTime = Date.now();
+
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      iconOffsetX = clientX - icon.offsetLeft;
+      iconOffsetY = clientY - icon.offsetTop;
       playSound('click');
-    });
+    };
 
-    document.addEventListener('mousemove', (e) => {
+    const moveIconDrag = (e) => {
       if (!isDraggingIcon) return;
-      icon.style.left = `${Math.max(0, e.clientX - iconOffsetX)}px`;
-      icon.style.top = `${Math.max(0, e.clientY - iconOffsetY)}px`;
-    });
+      touchMoved = true;
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      const maxLeft = Math.max(0, window.innerWidth - icon.offsetWidth);
+      const maxTop = Math.max(0, window.innerHeight - 34 - icon.offsetHeight);
+      const newLeft = Math.min(maxLeft, Math.max(0, clientX - iconOffsetX));
+      const newTop = Math.min(maxTop, Math.max(0, clientY - iconOffsetY));
+      icon.style.left = `${newLeft}px`;
+      icon.style.top = `${newTop}px`;
+    };
 
-    document.addEventListener('mouseup', () => {
+    const stopIconDrag = () => {
       if (!isDraggingIcon) return;
       isDraggingIcon = false;
       icon.classList.remove('dragging');
@@ -328,7 +400,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
       icon.style.left = `${PADDING_X + col * GRID_X}px`;
       icon.style.top = `${PADDING_Y + row * GRID_Y}px`;
-    });
+
+      // Touch tap opening for mobile touch devices
+      if (!touchMoved && (Date.now() - touchStartTime < 350)) {
+        const href = icon.dataset.href;
+        if (href) { window.location.href = href; return; }
+        const winId = icon.dataset.window;
+        if (winId) openWindow(winId);
+      }
+    };
+
+    icon.addEventListener('mousedown', startIconDrag);
+    icon.addEventListener('touchstart', startIconDrag, { passive: true });
+
+    document.addEventListener('mousemove', moveIconDrag);
+    document.addEventListener('touchmove', moveIconDrag, { passive: true });
+
+    document.addEventListener('mouseup', stopIconDrag);
+    document.addEventListener('touchend', stopIconDrag);
 
     icon.addEventListener('dblclick', () => {
       const href = icon.dataset.href;
