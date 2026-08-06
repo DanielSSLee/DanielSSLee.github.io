@@ -238,6 +238,28 @@
           <span class="icon-label">my ❤️</span>
         </div>
 
+        <!-- Shortcut 11: Solitaire Game -->
+        <div class="desktop-icon" id="icon-solitaire" data-window="win-solitaire" style="top: 216px; left: 208px;">
+          <div class="icon-img-box">
+            <svg width="40" height="40" viewBox="0 0 64 64" fill="none">
+              <rect width="64" height="64" rx="10" fill="url(#solitaire-icon-grad)" />
+              <rect x="14" y="10" width="34" height="44" rx="3" fill="#0053EE" stroke="#FFFFFF" stroke-width="1.5" transform="rotate(-8 31 32)"/>
+              <rect x="18" y="12" width="34" height="44" rx="3" fill="#FFFFFF" stroke="#003399" stroke-width="1.5"/>
+              <path d="M35 30 C35 25 28 22 25 27 C22 22 15 25 15 30 C15 35 25 41 25 41 C25 41 35 35 35 30 Z" fill="#E81123"/>
+              <text x="21" y="23" fill="#E81123" font-weight="bold" font-size="10" font-family="sans-serif">A</text>
+              <text x="21" y="30" fill="#E81123" font-size="8" font-family="sans-serif">♥</text>
+              <defs>
+                <linearGradient id="solitaire-icon-grad" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#005826" />
+                  <stop offset="0.5" stop-color="#008000" />
+                  <stop offset="1" stop-color="#004d1a" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <span class="icon-label">Solitaire</span>
+        </div>
+
       </div>
 
       <!-- WINDOWS CONTAINER (Draggable Windows) -->
@@ -1187,6 +1209,89 @@
           <div class="resize-handle w"></div>
         </div>
 
+        <!-- 11. WINDOWS SOLITAIRE WINDOW -->
+        <div class="window closed minimized" id="win-solitaire"
+          style="top: 40px; left: 160px; width: 800px; height: 580px; z-index: 500;">
+          <div class="window-titlebar">
+            <div class="titlebar-info">
+              <span class="titlebar-icon">🂠</span>
+              <span class="titlebar-title">Solitaire — Windows XP Classic</span>
+            </div>
+            <div class="window-controls">
+              <button class="win-btn btn-min" title="Minimize">_</button>
+              <button class="win-btn btn-max" title="Maximize">□</button>
+              <button class="win-btn btn-close" title="Close">✕</button>
+            </div>
+          </div>
+          <div class="window-body solitaire-body">
+            <!-- Solitaire Control Toolbar -->
+            <div class="solitaire-toolbar">
+              <div class="solitaire-menu-left">
+                <button class="solitaire-btn" id="sol-btn-new">🎮 New Game</button>
+                <button class="solitaire-btn" id="sol-btn-undo">↩ Undo</button>
+                <button class="solitaire-btn" id="sol-btn-draw-mode">🎴 Draw 1</button>
+                <button class="solitaire-btn" id="sol-btn-solve" title="Auto-complete game">🪄 Auto-Play</button>
+                <button class="solitaire-btn btn-win-demo" id="sol-btn-victory-demo" title="Trigger classic victory bouncing cards animation!">🏆 Victory Demo</button>
+              </div>
+              <div class="solitaire-menu-right">
+                <span class="sol-stat">Score: <strong id="sol-score">0</strong></span>
+                <span class="sol-stat">Time: <strong id="sol-timer">00:00</strong></span>
+                <span class="sol-stat">Moves: <strong id="sol-moves">0</strong></span>
+              </div>
+            </div>
+
+            <!-- Solitaire Felt Board -->
+            <div class="solitaire-board" id="sol-board">
+              <!-- Victory Animation Canvas Overlay -->
+              <canvas id="solitaire-victory-canvas" class="solitaire-canvas"></canvas>
+
+              <!-- Top Row: Stock, Waste, 4 Foundations -->
+              <div class="sol-top-row">
+                <div class="sol-stock-waste">
+                  <div class="sol-pile-slot stock-slot" id="sol-stock" title="Stock Pile (Click to draw)">
+                    <div class="slot-placeholder">↺</div>
+                  </div>
+                  <div class="sol-pile-slot waste-slot" id="sol-waste" title="Waste Pile"></div>
+                </div>
+
+                <div class="sol-foundations">
+                  <div class="sol-pile-slot foundation-slot" data-suit="H" id="sol-f-H" title="Hearts Foundation">
+                    <div class="slot-placeholder red-placeholder">♥</div>
+                  </div>
+                  <div class="sol-pile-slot foundation-slot" data-suit="D" id="sol-f-D" title="Diamonds Foundation">
+                    <div class="slot-placeholder red-placeholder">♦</div>
+                  </div>
+                  <div class="sol-pile-slot foundation-slot" data-suit="C" id="sol-f-C" title="Clubs Foundation">
+                    <div class="slot-placeholder">♣</div>
+                  </div>
+                  <div class="sol-pile-slot foundation-slot" data-suit="S" id="sol-f-S" title="Spades Foundation">
+                    <div class="slot-placeholder">♠</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Bottom Row: 7 Tableau Columns -->
+              <div class="sol-tableau-row">
+                <div class="sol-pile-slot tableau-slot" data-col="0" id="sol-t-0"></div>
+                <div class="sol-pile-slot tableau-slot" data-col="1" id="sol-t-1"></div>
+                <div class="sol-pile-slot tableau-slot" data-col="2" id="sol-t-2"></div>
+                <div class="sol-pile-slot tableau-slot" data-col="3" id="sol-t-3"></div>
+                <div class="sol-pile-slot tableau-slot" data-col="4" id="sol-t-4"></div>
+                <div class="sol-pile-slot tableau-slot" data-col="5" id="sol-t-5"></div>
+                <div class="sol-pile-slot tableau-slot" data-col="6" id="sol-t-6"></div>
+              </div>
+            </div>
+          </div>
+          <div class="resize-handle nw"></div>
+          <div class="resize-handle ne"></div>
+          <div class="resize-handle sw"></div>
+          <div class="resize-handle se"></div>
+          <div class="resize-handle n"></div>
+          <div class="resize-handle s"></div>
+          <div class="resize-handle e"></div>
+          <div class="resize-handle w"></div>
+        </div>
+
       </div>
 
     </main>
@@ -1200,6 +1305,8 @@
 
       <div class="start-menu-columns">
         <div class="start-column-left">
+          <div class="start-item" data-window="win-solitaire"><span class="start-item-icon">🂠</span><span
+              class="start-item-text">Solitaire</span></div>
           <div class="start-item" data-window="win-resume"><span class="start-item-icon">📜</span><span
               class="start-item-text">Resume.pdf</span></div>
           <div class="start-item" data-window="win-vscode"><span class="start-item-icon">📝</span><span
