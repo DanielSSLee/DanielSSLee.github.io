@@ -1,5 +1,5 @@
 /**
- * DANIELOS — WINDOWS XP-INSPIRED PORTFOLIO DESKTOP ENGINE
+ * SSLOS — WINDOWS XP-INSPIRED PORTFOLIO DESKTOP ENGINE
  * Seung Sik (Daniel) Lee Portfolio — B.S. Computer Engineering @ Texas A&M
  * Features: Boot Sequence, Resume Viewer & PDF Printer, VS Code App, Explorer Subfolders,
  * Draggable Icons (Align to Grid), Wallpapers, Terminal Easter Eggs (winver, sudo hire daniel, matrix)
@@ -14,7 +14,7 @@ window.completeBootGlobal = function() {
     bootScreen.style.display = 'none';
     bootScreen.classList.add('hidden');
   }
-  sessionStorage.setItem('danielos_booted', 'true');
+  sessionStorage.setItem('sslos_booted', 'true');
 };
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
     playSound('open');
   }
 
-  if (sessionStorage.getItem('danielos_booted') === 'true') {
+  if (sessionStorage.getItem('sslos_booted') === 'true') {
     window.completeBootGlobal();
   } else {
     setTimeout(() => {
@@ -121,6 +121,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // PowerShell terminal and Muhan Maesu trading app open maximized so all content is comfortably visible
     if (winId === 'win-terminal' || winId === 'win-muhan-maesu') {
       win.classList.add('maximized');
+    }
+    if (winId === 'win-my-heart') {
+      setTimeout(() => {
+        if (window.triggerInlineCelebration) window.triggerInlineCelebration('both');
+      }, 300);
     }
     bringToFront(win);
     playSound('open');
@@ -468,18 +473,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('ctx-wp-hills')?.addEventListener('click', () => {
+      if (window.stopAsciiMirrorWallpaper) window.stopAsciiMirrorWallpaper();
       document.documentElement.style.setProperty('--current-wallpaper', 'var(--wp-hills)');
       contextMenu.classList.remove('open');
+      playSound('click');
     });
 
-    document.getElementById('ctx-wp-bliss')?.addEventListener('click', () => {
-      document.documentElement.style.setProperty('--current-wallpaper', 'var(--wp-bliss)');
+    document.getElementById('ctx-wp-mirror')?.addEventListener('click', () => {
+      if (window.startAsciiMirrorWallpaper) window.startAsciiMirrorWallpaper();
       contextMenu.classList.remove('open');
-    });
-
-    document.getElementById('ctx-wp-cyber')?.addEventListener('click', () => {
-      document.documentElement.style.setProperty('--current-wallpaper', 'var(--wp-cyber)');
-      contextMenu.classList.remove('open');
+      playSound('click');
     });
 
     document.getElementById('ctx-winver')?.addEventListener('click', () => {
@@ -884,10 +887,10 @@ KW Internationals — Data Analytics Intern [May 2025 – July 2025]
   const terminalOutput = document.getElementById('terminal-output');
 
   if (cmdInput && terminalOutput) {
-    terminalOutput.innerHTML = `DanielOS Command Prompt [Version 2.3.2600]
+    terminalOutput.innerHTML = `SSLOS Command Prompt [Version 2.3.2600]
 (C) Copyright 2026 Seung Sik (Daniel) Lee. All rights reserved.
 
-C:\\DanielOS> Type 'help' for available commands.
+C:\\SSLOS> Type 'help' for available commands.
 `;
 
     cmdInput.addEventListener('keydown', (e) => {
@@ -896,7 +899,7 @@ C:\\DanielOS> Type 'help' for available commands.
         cmdInput.value = '';
         if (!command) return;
 
-        terminalOutput.innerHTML += `<div><span style="color:#ffffff;">C:\\DanielOS&gt;</span> ${command}</div>`;
+        terminalOutput.innerHTML += `<div><span style="color:#ffffff;">C:\\SSLOS&gt;</span> ${command}</div>`;
         handleCommand(command.toLowerCase());
         terminalOutput.scrollTop = terminalOutput.scrollHeight;
       }
@@ -910,19 +913,19 @@ C:\\DanielOS> Type 'help' for available commands.
   help              - Display command options
   dir / ls          - List files & folders
   cat resume.txt    - Read full resume text
-  winver            - Display DanielOS version dialog
+  winver            - Display SSLOS version dialog
   sudo hire daniel  - [SECRET] Candidate hiring authorization
   matrix            - [SECRET] Launch digital code waterfall
   tree              - Render project directory tree
   cls / clear       - Clear screen`;
       } else if (cmd === 'dir' || cmd === 'ls') {
-        response = ` Directory of C:\\DanielOS\n\n<DIR>          Projects\n<DIR>          VS Code\n-a---          resume.pdf\n-a---          bio.txt\n-a---          kitkatch.exe`;
+        response = ` Directory of C:\\SSLOS\n\n<DIR>          Projects\n<DIR>          VS Code\n-a---          resume.pdf\n-a---          bio.txt\n-a---          kitkatch.exe`;
       } else if (cmd === 'cat resume.txt' || cmd === 'cat resume.pdf' || cmd === 'resume') {
         openWindow('win-resume');
         response = 'Opening Resume.pdf viewer window...';
       } else if (cmd === 'winver') {
         openWindow('win-winver');
-        response = 'Opening About DanielOS dialog...';
+        response = 'Opening About SSLOS dialog...';
       } else if (cmd === 'sudo hire daniel') {
         response = `================================================
 [ACCESS GRANTED]
@@ -936,7 +939,7 @@ LinkedIn: linkedin.com/in/ssiklee
         startMatrixEffect();
         response = 'Matrix code effect activated! (Type "cls" or refresh to reset)';
       } else if (cmd === 'tree') {
-        response = `C:\\DanielOS
+        response = `C:\\SSLOS
 ├── 📜 Resume.pdf
 ├── 📁 Projects
 │   ├── 📁 Zoho Data Automation Tool
@@ -1019,7 +1022,7 @@ LinkedIn: linkedin.com/in/ssiklee
       'Saving your settings...',
       'Closing all programs...',
       'Logging off...',
-      'Shutting down DanielOS...',
+      'Shutting down SSLOS...',
       'Goodbye, and thanks for visiting! 👋'
     ];
 
@@ -1057,5 +1060,291 @@ LinkedIn: linkedin.com/in/ssiklee
       playSound('click');
     });
   }
+
+  // ------------------------------------------------------------------------
+  // DATING DAY COUNTER ENGINE & CELEBRATION PARTICLES FOR my ❤️
+  // ------------------------------------------------------------------------
+  const INLINE_START_DATE = new Date('2023-11-10T00:00:00');
+
+  function calculateDaysDatingInline() {
+    const now = new Date();
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const startDayStart = new Date(INLINE_START_DATE.getFullYear(), INLINE_START_DATE.getMonth(), INLINE_START_DATE.getDate());
+    const diffTime = todayStart.getTime() - startDayStart.getTime();
+    return Math.round(diffTime / (1000 * 60 * 60 * 24)) + 1;
+  }
+
+  window.updateInlineDatingCounter = function() {
+    const days = calculateDaysDatingInline();
+    const display = document.getElementById('inlineDayCounter');
+    if (display) display.textContent = days.toLocaleString();
+
+    const banner = document.getElementById('inlineMilestoneBanner');
+    const text = document.getElementById('inlineMilestoneText');
+    if (banner && text) {
+      let message = '';
+      if (days % 1000 === 0) message = `🎉 Happy ${days.toLocaleString()}th Day Milestone! 🎉`;
+      else if (days % 500 === 0) message = `✨ Spectacular ${days.toLocaleString()} Days Together! ✨`;
+      else if (days % 100 === 0) message = `💖 Cheers to ${days.toLocaleString()} Days! 💖`;
+      else if (days % 365 === 0) message = `🥂 Happy ${days / 365} Year Anniversary! 🥂`;
+
+      if (message) {
+        banner.style.display = 'inline-flex';
+        text.textContent = message;
+      }
+    }
+  };
+  window.updateInlineDatingCounter();
+
+  // Canvas Particles
+  const inlineCanvas = document.getElementById('myHeartFxCanvas');
+  let inlineParticles = [];
+
+  function resizeInlineCanvas() {
+    if (inlineCanvas && inlineCanvas.parentElement) {
+      inlineCanvas.width = inlineCanvas.parentElement.clientWidth || 700;
+      inlineCanvas.height = inlineCanvas.parentElement.clientHeight || 500;
+    }
+  }
+
+  if (inlineCanvas) {
+    const ctx = inlineCanvas.getContext('2d');
+    window.addEventListener('resize', resizeInlineCanvas);
+    setTimeout(resizeInlineCanvas, 200);
+
+    class InlineParticle {
+      constructor(x, y, color, type = 'spark') {
+        this.x = x; 
+        this.y = y; 
+        this.color = color; 
+        this.type = type;
+        const angle = Math.random() * Math.PI * 2;
+        
+        if (type === 'spark') {
+          const speed = Math.random() * 12 + 4;
+          this.vx = Math.cos(angle) * speed;
+          this.vy = Math.sin(angle) * speed;
+          this.gravity = 0.12;
+          this.friction = 0.965;
+          this.alpha = 1;
+          this.decay = Math.random() * 0.012 + 0.006;
+          this.size = Math.random() * 5 + 3;
+        } else {
+          const speed = Math.random() * 3 + 1.5;
+          this.vx = (Math.random() - 0.5) * 3;
+          this.vy = Math.random() * 2 + 1.2;
+          this.gravity = 0.035;
+          this.friction = 0.99;
+          this.alpha = 1;
+          this.decay = Math.random() * 0.003 + 0.0015;
+          this.size = Math.random() * 12 + 6;
+          this.rotation = Math.random() * 360;
+          this.rotSpeed = (Math.random() - 0.5) * 6;
+          this.wobble = Math.random() * Math.PI * 2;
+          this.wobbleSpeed = Math.random() * 0.08 + 0.03;
+        }
+      }
+      update() {
+        this.vx *= this.friction; 
+        this.vy *= this.friction; 
+        this.vy += this.gravity;
+        
+        if (this.type === 'confetti' || this.type === 'heart') {
+          this.wobble += this.wobbleSpeed;
+          this.x += this.vx + Math.sin(this.wobble) * 1.2;
+        } else {
+          this.x += this.vx;
+        }
+        
+        this.y += this.vy; 
+        this.alpha -= this.decay; 
+        if (this.rotation !== undefined) this.rotation += this.rotSpeed;
+      }
+      draw() {
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, this.alpha);
+        ctx.translate(this.x, this.y);
+        ctx.rotate(((this.rotation || 0) * Math.PI) / 180);
+        
+        if (this.type === 'confetti') {
+          ctx.fillStyle = this.color;
+          ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size * 1.8);
+        } else if (this.type === 'heart') {
+          ctx.fillStyle = this.color;
+          ctx.beginPath();
+          ctx.arc(-this.size/4, -this.size/4, this.size/4, 0, Math.PI, true);
+          ctx.arc(this.size/4, -this.size/4, this.size/4, 0, Math.PI, true);
+          ctx.lineTo(0, this.size/2);
+          ctx.closePath();
+          ctx.fill();
+        } else {
+          ctx.fillStyle = this.color;
+          ctx.shadowBlur = 10;
+          ctx.shadowColor = this.color;
+          ctx.beginPath(); 
+          ctx.arc(0, 0, this.size, 0, Math.PI * 2); 
+          ctx.fill();
+        }
+        ctx.restore();
+      }
+    }
+
+    window.triggerInlineCelebration = function(mode = 'both') {
+      resizeInlineCanvas();
+      const colors = ['#ff3366', '#ffd700', '#00f2fe', '#4facfe', '#ff85a2', '#ffffff', '#a855f7', '#ff6b6b', '#feca57'];
+      const w = inlineCanvas.width || 700;
+      const h = inlineCanvas.height || 500;
+      
+      if (mode === 'fireworks' || mode === 'both') {
+        const cx = w / 2;
+        const cy = h / 3;
+        
+        // Grand multi-stage fireworks barrage
+        for (let i = 0; i < 110; i++) inlineParticles.push(new InlineParticle(cx, cy - 30, colors[Math.floor(Math.random() * colors.length)], 'spark'));
+        
+        setTimeout(() => {
+          for (let i = 0; i < 90; i++) inlineParticles.push(new InlineParticle(cx - 180, cy + 40, colors[Math.floor(Math.random() * colors.length)], 'spark'));
+          for (let i = 0; i < 90; i++) inlineParticles.push(new InlineParticle(cx + 180, cy + 40, colors[Math.floor(Math.random() * colors.length)], 'spark'));
+        }, 180);
+
+        setTimeout(() => {
+          for (let i = 0; i < 130; i++) inlineParticles.push(new InlineParticle(cx, cy - 80, colors[Math.floor(Math.random() * colors.length)], 'spark'));
+        }, 360);
+      }
+      
+      if (mode === 'confetti' || mode === 'both') {
+        // Multi-wave long-lasting fluttering confetti shower
+        for (let wave = 0; wave < 3; wave++) {
+          setTimeout(() => {
+            for (let i = 0; i < 70; i++) {
+              const x = Math.random() * w;
+              const y = -10 - (Math.random() * 40);
+              const color = colors[Math.floor(Math.random() * colors.length)];
+              const type = Math.random() > 0.35 ? 'confetti' : 'heart';
+              inlineParticles.push(new InlineParticle(x, y, color, type));
+            }
+          }, wave * 250);
+        }
+      }
+      playSound('click');
+    };
+
+    function renderLoop() {
+      ctx.clearRect(0, 0, inlineCanvas.width, inlineCanvas.height);
+      for (let i = inlineParticles.length - 1; i >= 0; i--) {
+        const p = inlineParticles[i]; p.update(); p.draw();
+        if (p.alpha <= 0 || p.y > inlineCanvas.height + 20) inlineParticles.splice(i, 1);
+      }
+      requestAnimationFrame(renderLoop);
+    }
+    renderLoop();
+  }
+
+  window.addInlinePhoto = function(slot) {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+          const boxes = document.querySelectorAll('.inline-photo-box');
+          if (boxes[slot - 1]) {
+            boxes[slot - 1].innerHTML = `<img src="${evt.target.result}" style="width:100%;height:100%;object-fit:cover;border-radius:12px;" alt="Photo ${slot}">`;
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+    };
+    input.click();
+  };
+
+  // ------------------------------------------------------------------------
+  // WEBCAM ASCII MIRROR LIVE WALLPAPER ENGINE (MATRIX GREEN)
+  // ------------------------------------------------------------------------
+  let asciiStream = null;
+  let asciiAnimFrame = null;
+  const asciiOverlay = document.getElementById('ascii-wallpaper-overlay');
+  const asciiPre = document.getElementById('ascii-display-pre');
+  const asciiVideo = document.getElementById('ascii-video-elem');
+  const asciiCanvas = document.getElementById('ascii-canvas-elem');
+  const ASCII_CHAR_RAMP = ' .:-=+*#%@';
+
+  window.stopAsciiMirrorWallpaper = function() {
+    if (asciiAnimFrame) {
+      cancelAnimationFrame(asciiAnimFrame);
+      asciiAnimFrame = null;
+    }
+    if (asciiStream) {
+      asciiStream.getTracks().forEach(track => track.stop());
+      asciiStream = null;
+    }
+    if (asciiOverlay) {
+      asciiOverlay.classList.remove('active');
+    }
+  };
+
+  window.startAsciiMirrorWallpaper = async function() {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      alert('Camera access is not supported by your browser.');
+      return;
+    }
+
+    try {
+      window.stopAsciiMirrorWallpaper();
+
+      asciiStream = await navigator.mediaDevices.getUserMedia({
+        video: { width: { ideal: 140 }, height: { ideal: 90 }, facingMode: "user" }
+      });
+
+      if (asciiVideo) {
+        asciiVideo.srcObject = asciiStream;
+        await asciiVideo.play();
+      }
+
+      if (asciiOverlay) asciiOverlay.classList.add('active');
+
+      const width = 110;
+      const height = 55;
+      if (asciiCanvas) {
+        asciiCanvas.width = width;
+        asciiCanvas.height = height;
+      }
+      const ctx = asciiCanvas ? asciiCanvas.getContext('2d', { willReadFrequently: true }) : null;
+
+      function renderAsciiFrame() {
+        if (!asciiStream || !ctx || !asciiVideo || !asciiOverlay.classList.contains('active')) return;
+
+        ctx.drawImage(asciiVideo, 0, 0, width, height);
+        const imgData = ctx.getImageData(0, 0, width, height);
+        const pixels = imgData.data;
+
+        let asciiStr = '';
+        for (let y = 0; y < height; y++) {
+          for (let x = 0; x < width; x++) {
+            const idx = (y * width + x) * 4;
+            const r = pixels[idx];
+            const g = pixels[idx + 1];
+            const b = pixels[idx + 2];
+            const brightness = 0.299 * r + 0.587 * g + 0.114 * b;
+            const charIdx = Math.floor((brightness / 255) * (ASCII_CHAR_RAMP.length - 1));
+            asciiStr += ASCII_CHAR_RAMP[charIdx];
+          }
+          asciiStr += '\n';
+        }
+
+        if (asciiPre) asciiPre.textContent = asciiStr;
+        asciiAnimFrame = requestAnimationFrame(renderAsciiFrame);
+      }
+
+      renderAsciiFrame();
+      playSound('open');
+    } catch (err) {
+      console.warn('Webcam permission denied or unavailable:', err);
+      alert('Webcam access was denied or is unavailable. Please grant camera permission to use the Mirror wallpaper.');
+      window.stopAsciiMirrorWallpaper();
+    }
+  };
 });
 

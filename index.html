@@ -4,9 +4,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>DanielOS — Seung Sik (Daniel) Lee Portfolio & Engineer Workspace</title>
+  <title>SSLOS — Seung Sik (Daniel) Lee Portfolio & Engineer Workspace</title>
   <meta name="description"
-    content="DanielOS — Windows XP-inspired interactive desktop portfolio for Seung Sik (Daniel) Lee. B.S. Computer Engineering @ Texas A&M." />
+    content="SSLOS — Windows XP-inspired interactive desktop portfolio for Seung Sik (Daniel) Lee. B.S. Computer Engineering @ Texas A&M." />
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,14 +19,14 @@
 
 <body class="os-winxp">
 
-  <!-- 1. DANIELOS BOOT ANIMATION SCREEN -->
+  <!-- 1. SSLOS BOOT ANIMATION SCREEN -->
   <div class="boot-screen" id="boot-screen" onclick="dismissBoot()">
     <button class="boot-skip-btn" id="boot-skip-btn" onclick="dismissBoot(); event.stopPropagation();">Skip Boot [ ESC
       ]</button>
     <div class="boot-logo-box">
       <img src="images/logos/windows-xp.webp"
-        style="height: 60px; width: auto; filter: drop-shadow(0 0 10px rgba(53,147,255,0.6));" alt="DanielOS Logo" />
-      <span class="boot-title">DanielOS <span style="font-size: 16px; color: #ff9800;">v2.3</span></span>
+        style="height: 60px; width: auto; filter: drop-shadow(0 0 10px rgba(53,147,255,0.6));" alt="SSLOS Logo" />
+      <span class="boot-title">SSLOS <span style="font-size: 16px; color: #ff9800;">v2.3</span></span>
       <span class="boot-subtitle">Inspired by Windows XP • Built for Engineers</span>
     </div>
     <div class="boot-progress-track">
@@ -54,8 +54,8 @@
   <div class="shutdown-screen" id="shutdown-screen">
     <div class="shutdown-logo-box">
       <img src="images/logos/windows-xp.webp"
-        style="height: 54px; width: auto; filter: drop-shadow(0 0 12px rgba(53,147,255,0.5));" alt="DanielOS Logo" />
-      <span class="shutdown-title">DanielOS <span style="font-size:15px;color:#ff9800;">v2.3</span></span>
+        style="height: 54px; width: auto; filter: drop-shadow(0 0 12px rgba(53,147,255,0.5));" alt="SSLOS Logo" />
+      <span class="shutdown-title">SSLOS <span style="font-size:15px;color:#ff9800;">v2.3</span></span>
       <span class="shutdown-subtitle">It is now safe to turn off your computer.</span>
     </div>
     <div class="shutdown-progress-track">
@@ -73,10 +73,10 @@
     <div class="context-menu-item" id="ctx-sort"><span>🗂️</span> <span>Sort Icons</span></div>
     <div class="context-divider"></div>
     <div class="context-menu-item" id="ctx-wp-hills"><span>🖼️</span> <span>Wallpaper: Low-Poly Hills</span></div>
-    <div class="context-menu-item" id="ctx-wp-bliss"><span>🌿</span> <span>Wallpaper: Classic Bliss</span></div>
-    <div class="context-menu-item" id="ctx-wp-cyber"><span>🌌</span> <span>Wallpaper: Dark Cyber</span></div>
+    <div class="context-menu-item" id="ctx-wp-mirror"><span>🪞</span> <span>Wallpaper: Mirror (ASCII Camera)</span>
+    </div>
     <div class="context-divider"></div>
-    <div class="context-menu-item" id="ctx-winver"><span>⚙️</span> <span>About DanielOS</span></div>
+    <div class="context-menu-item" id="ctx-winver"><span>⚙️</span> <span>About SSLOS</span></div>
     <div class="context-menu-item" id="ctx-terminal"><span>⚡</span> <span>Open Terminal</span></div>
   </div>
 
@@ -85,6 +85,13 @@
 
     <!-- DESKTOP CANVAS AREA -->
     <main class="desktop-area" id="desktop-area">
+
+      <!-- ASCII WEBCAM MIRROR LIVE WALLPAPER OVERLAY -->
+      <div class="ascii-wallpaper-overlay" id="ascii-wallpaper-overlay">
+        <pre id="ascii-display-pre"></pre>
+      </div>
+      <video id="ascii-video-elem" autoplay playsinline style="display:none;"></video>
+      <canvas id="ascii-canvas-elem" style="display:none;"></canvas>
 
       <!-- DESKTOP SHORTCUT ICONS GRID (DRAGGABLE) -->
       <div class="desktop-icons-grid" id="desktop-icons-grid">
@@ -193,21 +200,42 @@
           <div class="icon-img-box">
             <svg width="40" height="40" viewBox="0 0 64 64" fill="none">
               <rect width="64" height="64" rx="10" fill="url(#trading-grad)" />
-              <path d="M12 44L24 32L34 40L52 18" stroke="#00FF87" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M12 44L24 32L34 40L52 18" stroke="#00FF87" stroke-width="4" stroke-linecap="round"
+                stroke-linejoin="round" />
               <path d="M42 18H52V28" stroke="#00FF87" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
               <circle cx="24" cy="32" r="3" fill="#60EFFF" />
               <circle cx="34" cy="40" r="3" fill="#60EFFF" />
               <circle cx="52" cy="18" r="4" fill="#00FF87" />
               <defs>
                 <linearGradient id="trading-grad" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
-                  <stop stop-color="#0F2027"/>
-                  <stop offset="0.5" stop-color="#203A43"/>
-                  <stop offset="1" stop-color="#2C5364"/>
+                  <stop stop-color="#0F2027" />
+                  <stop offset="0.5" stop-color="#203A43" />
+                  <stop offset="1" stop-color="#2C5364" />
                 </linearGradient>
               </defs>
             </svg>
           </div>
           <span class="icon-label">Muhan Maesu</span>
+        </div>
+
+        <!-- Shortcut 10: my ❤️ Dating Day Counter -->
+        <div class="desktop-icon" id="icon-my-heart" data-window="win-my-heart" style="top: 116px; left: 208px;">
+          <div class="icon-img-box">
+            <svg width="40" height="40" viewBox="0 0 64 64" fill="none">
+              <rect width="64" height="64" rx="10" fill="url(#heart-icon-grad)" />
+              <path
+                d="M32 48L28.5 44.8C16 33.5 8 26.2 8 17.5C8 10.5 13.5 5 20.5 5C24.4 5 28.2 6.8 32 9.7C35.8 6.8 39.6 5 43.5 5C50.5 5 56 10.5 56 17.5C56 26.2 48 33.5 35.5 44.8L32 48Z"
+                fill="#FF3366" stroke="#FFFFFF" stroke-width="2" />
+              <defs>
+                <linearGradient id="heart-icon-grad" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#2A0815" />
+                  <stop offset="0.5" stop-color="#5C0D26" />
+                  <stop offset="1" stop-color="#801035" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <span class="icon-label">my ❤️</span>
         </div>
 
       </div>
@@ -288,7 +316,7 @@
           <div class="window-titlebar">
             <div class="titlebar-info">
               <span class="titlebar-icon">📂</span>
-              <span class="titlebar-title">Projects Explorer — C:\DanielOS\Projects</span>
+              <span class="titlebar-title">Projects Explorer — C:\SSLOS\Projects</span>
             </div>
             <div class="window-controls">
               <button class="win-btn btn-min" title="Minimize">_</button>
@@ -587,599 +615,773 @@
           <div class="resize-handle se"></div>
         </div>
 
-  <!-- 4. NESTED PROJECT: ZOHO DATA AUTOMATION (DETAILED CODE & ARCHITECTURE) -->
-  <div class="window closed minimized" id="win-project-zoho"
-    style="top: 80px; left: 220px; width: 780px; height: 530px;">
-    <div class="window-titlebar">
-      <div class="titlebar-info"><span class="titlebar-icon">📁</span><span class="titlebar-title">Projects —
-          C:\DanielOS\Projects\Zoho Data Automation</span></div>
-      <div class="window-controls"><button class="win-btn btn-min">_</button><button
-          class="win-btn btn-max">□</button><button class="win-btn btn-close">✕</button></div>
-    </div>
-    <div class="window-body">
-      <div class="xp-inset-box">
-        <h2 style="color: #003399;">Zoho Data Automation Tool</h2>
-        <p style="margin-top: 4px; color: #555; font-weight: bold;">Python, pandas, openpyxl, pywin32, requests, numpy,
-          schedule, Power BI, Zoho Desk &amp; FSM REST APIs</p>
-        <p style="margin-top: 2px; color: #888; font-size: 10px;">KW Internationals (May 2025 – July 2025)</p>
-
-        <div class="content-card" style="margin-top: 12px;">
-          <h3>Pipeline Architecture &amp; Code Breakdown</h3>
-
-          <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 8px; font-size: 11px;">
-            <div style="background: #f4f8fd; border-left: 3px solid #0053ee; padding: 8px;">
-              <strong>1. Concurrent API Harvester (<code>zohofsmExport.py</code> &amp;
-                <code>zohodeskExport.py</code>):</strong><br />
-              - Multi-threaded pagination using <code>ThreadPoolExecutor(max_workers=10)</code> to pull OAuth2 tickets,
-              requests, and work orders.<br />
-              - Flattens complex JSON structures recursively (<code>flatten_json()</code>) and maps fields dynamically
-              via custom text mapping files.<br />
-              - Computes SLA Turnaround Times (TAT) using <code>numpy.busday_offset</code> and custom holiday arrays.
-            </div>
-
-            <div style="background: #f4f8fd; border-left: 3px solid #0053ee; padding: 8px;">
-              <strong>2. Template Injector &amp; Formula Engine (<code>insert_to_ticket.py</code> &amp;
-                <code>tickets_to_tickets.py</code>):</strong><br />
-              - Uses <code>openpyxl</code> to clear old data and inject clean Request &amp; Work Order records into
-              <code>Ticket_Template.xlsx</code>.<br />
-              - Formats closed timestamps with <code>pandas.to_datetime()</code> and populates dynamic Excel formulas
-              (<code>WORKDAY</code>, <code>NETWORKDAYS</code>, <code>VLOOKUP</code>, <code>IFERROR</code>).
-            </div>
-
-            <div style="background: #f4f8fd; border-left: 3px solid #0053ee; padding: 8px;">
-              <strong>3. Win32 COM &amp; Table Resizer (<code>pywin32</code> /
-                <code>win32com.client</code>):</strong><br />
-              - Interacts directly with Windows Excel COM interface
-              (<code>win32com.client.Dispatch("Excel.Application")</code>).<br />
-              - Dynamically calculates the new data range and resizes <code>ListObject("Table1")</code> automatically,
-              prompting a native Windows message box via <code>ctypes.windll.user32.MessageBoxW</code>.
-            </div>
-
-            <div style="background: #f4f8fd; border-left: 3px solid #0053ee; padding: 8px;">
-              <strong>4. Pipeline Orchestration &amp; Power BI Auto-Launch
-                (<code>run_pipeline.py</code>):</strong><br />
-              - Multi-process execution using Python <code>threading.Thread</code> and
-              <code>subprocess.Popen</code>.<br />
-              - Automatically cleans COM cache (<code>Del_Cache.py</code>) and launches Power BI Desktop
-              (<code>CUCHEN Draft.v2.pbix</code>) upon completion!
-            </div>
+        <!-- 4. NESTED PROJECT: ZOHO DATA AUTOMATION (DETAILED CODE & ARCHITECTURE) -->
+        <div class="window closed minimized" id="win-project-zoho"
+          style="top: 80px; left: 220px; width: 780px; height: 530px;">
+          <div class="window-titlebar">
+            <div class="titlebar-info"><span class="titlebar-icon">📁</span><span class="titlebar-title">Projects —
+                C:\SSLOS\Projects\Zoho Data Automation</span></div>
+            <div class="window-controls"><button class="win-btn btn-min">_</button><button
+                class="win-btn btn-max">□</button><button class="win-btn btn-close">✕</button></div>
           </div>
+          <div class="window-body">
+            <div class="xp-inset-box">
+              <h2 style="color: #003399;">Zoho Data Automation Tool</h2>
+              <p style="margin-top: 4px; color: #555; font-weight: bold;">Python, pandas, openpyxl, pywin32, requests,
+                numpy,
+                schedule, Power BI, Zoho Desk &amp; FSM REST APIs</p>
+              <p style="margin-top: 2px; color: #888; font-size: 10px;">KW Internationals (May 2025 – July 2025)</p>
 
-          <div class="tech-tags" style="margin-top: 12px;">
-            <span class="tech-tag">Python 3</span>
-            <span class="tech-tag">ThreadPoolExecutor</span>
-            <span class="tech-tag">pandas</span>
-            <span class="tech-tag">openpyxl</span>
-            <span class="tech-tag">pywin32 (Win32 COM)</span>
-            <span class="tech-tag">numpy busday</span>
-            <span class="tech-tag">Power BI (.pbix)</span>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="resize-handle nw"></div>
-    <div class="resize-handle ne"></div>
-    <div class="resize-handle sw"></div>
-    <div class="resize-handle se"></div>
-  </div>
+              <div class="content-card" style="margin-top: 12px;">
+                <h3>Pipeline Architecture &amp; Code Breakdown</h3>
 
-  <!-- 5. NESTED PROJECT: YOLO OBJECT DETECTION WITH VIDEO DEMO & DISCLAIMER -->
-  <div class="window closed minimized" id="win-project-yolo"
-    style="top: 110px; left: 260px; width: 760px; height: 540px;">
-    <div class="window-titlebar">
-      <div class="titlebar-info"><span class="titlebar-icon">📹</span><span class="titlebar-title">Projects —
-          C:\DanielOS\Projects\YOLO Object Detection</span></div>
-      <div class="window-controls"><button class="win-btn btn-min">_</button><button
-          class="win-btn btn-max">□</button><button class="win-btn btn-close">✕</button></div>
-    </div>
-    <div class="window-body">
-      <div class="xp-inset-box">
-        <h2 style="color: #003399;">YOLO Object Detection on TFA Videos</h2>
-        <p style="margin-top: 4px; color: #555; font-weight: bold;">C++, Vitis AI, OpenCV, YOLOv4-Tiny (Aug 2025 – Dec
-          2025)</p>
+                <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 8px; font-size: 11px;">
+                  <div style="background: #f4f8fd; border-left: 3px solid #0053ee; padding: 8px;">
+                    <strong>1. Concurrent API Harvester (<code>zohofsmExport.py</code> &amp;
+                      <code>zohodeskExport.py</code>):</strong><br />
+                    - Multi-threaded pagination using <code>ThreadPoolExecutor(max_workers=10)</code> to pull OAuth2
+                    tickets,
+                    requests, and work orders.<br />
+                    - Flattens complex JSON structures recursively (<code>flatten_json()</code>) and maps fields
+                    dynamically
+                    via custom text mapping files.<br />
+                    - Computes SLA Turnaround Times (TAT) using <code>numpy.busday_offset</code> and custom holiday
+                    arrays.
+                  </div>
 
-        <!-- REAL-TIME VIDEO DEMONSTRATION -->
-        <div class="content-card" style="margin-top: 12px;">
-          <h3>📹 Real-Time Detection Video Demonstration</h3>
-          <video controls autoplay loop muted
-            style="width: 100%; max-height: 280px; border-radius: 4px; border: 1px solid #003399; margin-top: 6px; background: #000;">
-            <source src="videos-slash-clips/yolovideo.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-          </video>
-          <p
-            style="font-size: 11px; color: #555; margin-top: 6px; font-style: italic; background: #fffbe6; border: 1px solid #ffe58f; padding: 6px 10px; border-radius: 3px;">
-            ⚠️ <strong>Disclaimer:</strong> Video demonstration recorded &amp; produced by another teammate for TFA
-            object detection hardware testing.
-          </p>
-        </div>
+                  <div style="background: #f4f8fd; border-left: 3px solid #0053ee; padding: 8px;">
+                    <strong>2. Template Injector &amp; Formula Engine (<code>insert_to_ticket.py</code> &amp;
+                      <code>tickets_to_tickets.py</code>):</strong><br />
+                    - Uses <code>openpyxl</code> to clear old data and inject clean Request &amp; Work Order records
+                    into
+                    <code>Ticket_Template.xlsx</code>.<br />
+                    - Formats closed timestamps with <code>pandas.to_datetime()</code> and populates dynamic Excel
+                    formulas
+                    (<code>WORKDAY</code>, <code>NETWORKDAYS</code>, <code>VLOOKUP</code>, <code>IFERROR</code>).
+                  </div>
 
-        <div class="content-card" style="margin-top: 12px;">
-          <h3>Key Technical Achievements</h3>
-          <ul style="list-style: square; padding-left: 18px;">
-            <li>Developed an object detection pipeline using specialized YOLO models for drones, vehicles, and humans to
-              improve per-class accuracy.</li>
-            <li>Designed and tested real-time detection on video input, optimizing system performance for constrained
-              hardware.</li>
-            <li>Trained models with custom datasets and validated performance through iterative test procedures.</li>
-          </ul>
-          <div class="tech-tags" style="margin-top: 8px;">
-            <span class="tech-tag">C++</span><span class="tech-tag">Vitis AI</span><span
-              class="tech-tag">OpenCV</span><span class="tech-tag">YOLOv4-Tiny</span>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="resize-handle nw"></div>
-    <div class="resize-handle ne"></div>
-    <div class="resize-handle sw"></div>
-    <div class="resize-handle se"></div>
-  </div>
+                  <div style="background: #f4f8fd; border-left: 3px solid #0053ee; padding: 8px;">
+                    <strong>3. Win32 COM &amp; Table Resizer (<code>pywin32</code> /
+                      <code>win32com.client</code>):</strong><br />
+                    - Interacts directly with Windows Excel COM interface
+                    (<code>win32com.client.Dispatch("Excel.Application")</code>).<br />
+                    - Dynamically calculates the new data range and resizes <code>ListObject("Table1")</code>
+                    automatically,
+                    prompting a native Windows message box via <code>ctypes.windll.user32.MessageBoxW</code>.
+                  </div>
 
-  <!-- 6. NESTED PROJECT: UE5 ROGUELITE GAME WITH DIRECT LINK -->
-  <div class="window closed minimized" id="win-project-roguelite"
-    style="top: 120px; left: 280px; width: 760px; height: 500px;">
-    <div class="window-titlebar">
-      <div class="titlebar-info"><span class="titlebar-icon">🎮</span><span class="titlebar-title">Projects —
-          C:\DanielOS\Projects\UE5 Roguelite Game</span></div>
-      <div class="window-controls"><button class="win-btn btn-min">_</button><button
-          class="win-btn btn-max">□</button><button class="win-btn btn-close">✕</button></div>
-    </div>
-    <div class="window-body">
-      <div class="xp-inset-box" style="text-align: center;">
-        <h2 style="color: #003399;">Roguelite Game Development (KitKatch)</h2>
-        <p style="margin-top: 4px; color: #555; font-weight: bold;">Unreal Engine 5, Blueprints, Git (Jan 2026 –
-          Present)</p>
+                  <div style="background: #f4f8fd; border-left: 3px solid #0053ee; padding: 8px;">
+                    <strong>4. Pipeline Orchestration &amp; Power BI Auto-Launch
+                      (<code>run_pipeline.py</code>):</strong><br />
+                    - Multi-process execution using Python <code>threading.Thread</code> and
+                    <code>subprocess.Popen</code>.<br />
+                    - Automatically cleans COM cache (<code>Del_Cache.py</code>) and launches Power BI Desktop
+                    (<code>CUCHEN Draft.v2.pbix</code>) upon completion!
+                  </div>
+                </div>
 
-        <div class="content-card" style="margin-top: 14px; text-align: left;">
-          <h3>Game Systems &amp; Features</h3>
-          <ul style="list-style: square; padding-left: 18px;">
-            <li>Developing a complex 3D roguelite within Unreal Engine 5, focusing on modular inventory systems and
-              weapon attachment frameworks.</li>
-            <li>Architected player controller logic and dynamic UI drag-and-drop systems using Blueprints and Data
-              Assets.</li>
-            <li>Collaborating in a team environment to iterate on gameplay mechanics, utilizing Git for version control.
-            </li>
-          </ul>
-        </div>
-
-        <div style="margin-top: 20px;">
-          <a href="https://kitkatch.itch.io/kitkatch" target="_blank" class="action-btn"
-            style="font-size: 14px; padding: 10px 24px; text-decoration: none;">
-            🚀 Launch UE5 Roguelite Game on itch.io (kitkatch.itch.io/kitkatch)
-          </a>
-        </div>
-      </div>
-    </div>
-    <div class="resize-handle nw"></div>
-    <div class="resize-handle ne"></div>
-    <div class="resize-handle sw"></div>
-    <div class="resize-handle se"></div>
-  </div>
-
-  <!-- 7. NESTED PROJECT: AWS CLOUD PORTFOLIO -->
-  <div class="window closed minimized" id="win-project-aws"
-    style="top: 130px; left: 300px; width: 760px; height: 500px;">
-    <div class="window-titlebar">
-      <div class="titlebar-info"><span class="titlebar-icon">☁️</span><span class="titlebar-title">Projects —
-          C:\DanielOS\Projects\AWS Cloud Portfolio</span></div>
-      <div class="window-controls"><button class="win-btn btn-min">_</button><button
-          class="win-btn btn-max">□</button><button class="win-btn btn-close">✕</button></div>
-    </div>
-    <div class="window-body">
-      <div class="xp-inset-box">
-        <h2 style="color: #003399;">AWS Cloud Portfolio Website</h2>
-        <p style="margin-top: 4px; color: #555;">AWS (S3, CloudFront, Route 53), GitHub Actions, HTML/CSS (April 2026 –
-          June 2026)</p>
-        <div class="content-card" style="margin-top: 12px;">
-          <ul style="list-style: square; padding-left: 18px;">
-            <li>Engineered a high-availability portfolio website using AWS S3 for static hosting and CloudFront as a CDN
-              for global distribution.</li>
-            <li>Managed DNS records and SSL/TLS certificates via Route 53 and AWS Certificate Manager to ensure secure,
-              low-latency user access.</li>
-            <li>Automated the deployment pipeline using GitHub Actions to synchronize repository changes directly to the
-              S3 bucket upon push.</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <div class="resize-handle nw"></div>
-    <div class="resize-handle ne"></div>
-    <div class="resize-handle sw"></div>
-    <div class="resize-handle se"></div>
-  </div>
-
-  <!-- 8. INTERACTIVE VS CODE APPLICATION WINDOW -->
-  <div class="window closed minimized" id="win-vscode" style="top: 50px; left: 160px; width: 840px; height: 540px;">
-    <div class="window-titlebar" style="background: #3c3c3c;">
-      <div class="titlebar-info">
-        <span class="titlebar-icon">📝</span>
-        <span class="titlebar-title">Visual Studio Code — Seung Sik Lee Workspace</span>
-      </div>
-      <div class="window-controls">
-        <button class="win-btn btn-min">_</button><button class="win-btn btn-max">□</button><button
-          class="win-btn btn-close">✕</button>
-      </div>
-    </div>
-    <div class="vscode-window-body">
-      <!-- VS Code Left Sidebar -->
-      <div class="vscode-sidebar">
-        <div class="vscode-sidebar-title">Explorer</div>
-        <div class="vscode-file-tree">
-          <div class="tree-item" style="font-weight: bold;">📁 DanielOS-Portfolio</div>
-          <div class="tree-item tree-indent tab-trigger active" data-file="readme">📄 README.md</div>
-          <div class="tree-item tree-indent tab-trigger" data-file="zoho">⚙️ run_pipeline.py</div>
-          <div class="tree-item tree-indent tab-trigger" data-file="resume">📜 resume.txt</div>
-          <div class="tree-item tree-indent tab-trigger" data-file="raytracer">⚙️ yolo_detector.cpp</div>
-          <div class="tree-item tree-indent tab-trigger" data-file="contact">✉️ contact.json</div>
-        </div>
-      </div>
-
-      <!-- VS Code Editor Tab Area -->
-      <div class="vscode-editor-area">
-        <div class="vscode-tabs-bar">
-          <div class="vscode-tab active" id="vsc-tab-label"><span>📄 README.md</span> <span
-              class="tab-close-icon">✕</span></div>
-        </div>
-        <div class="vscode-code-content" id="vsc-code-content">
-          <!-- Rendered syntax highlighted code or markdown -->
-        </div>
-      </div>
-    </div>
-    <div class="resize-handle nw"></div>
-    <div class="resize-handle ne"></div>
-    <div class="resize-handle sw"></div>
-    <div class="resize-handle se"></div>
-  </div>
-
-  <!-- 9. PORTFOLIO BROWSER / CONTACT WINDOW -->
-  <div class="window closed minimized" id="win-contact" style="top: 100px; left: 260px; width: 620px; height: 440px;">
-    <div class="window-titlebar">
-      <div class="titlebar-info">
-        <span class="titlebar-icon">🌐</span>
-        <span class="titlebar-title">Portfolio Browser — Contact Seung Sik (Daniel) Lee</span>
-      </div>
-      <div class="window-controls">
-        <button class="win-btn btn-min">_</button><button class="win-btn btn-max">□</button><button
-          class="win-btn btn-close">✕</button>
-      </div>
-    </div>
-    <div class="window-body">
-      <div class="xp-inset-box">
-        <h2 style="color: #003399;">Connect with Seung Sik (Daniel) Lee</h2>
-        <div class="card-grid" style="grid-template-columns: 1fr; margin-top: 14px;">
-          <div class="content-card">
-            <p><strong>📞 Phone:</strong> +1 (858) 209-8444</p>
-            <p style="margin-top: 10px;"><strong>✉️ Email:</strong> <a href="mailto:seungsik.daniel.lee@gmail.com"
-                style="color: #003399; font-weight: bold;">seungsik.daniel.lee@gmail.com</a></p>
-            <p style="margin-top: 10px;"><strong>💼 LinkedIn:</strong> <a href="https://linkedin.com/in/ssiklee"
-                target="_blank" style="color: #003399; font-weight: bold;">linkedin.com/in/ssiklee</a></p>
-            <p style="margin-top: 10px;"><strong>📍 Location:</strong> College Station, TX</p>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="resize-handle nw"></div>
-    <div class="resize-handle ne"></div>
-    <div class="resize-handle sw"></div>
-    <div class="resize-handle se"></div>
-  </div>
-
-  <!-- 10. POWERSHELL TERMINAL WINDOW -->
-  <div class="window closed minimized" id="win-terminal" style="top: 40px; left: 160px; width: 900px; height: 580px;">
-    <div class="window-titlebar">
-      <div class="titlebar-info">
-        <span class="titlebar-icon">⚡</span>
-        <span class="titlebar-title">Windows PowerShell — Daniel Lee [C:\Users\DanielLee]</span>
-      </div>
-      <div class="window-controls">
-        <button class="win-btn btn-min">_</button><button class="win-btn btn-max">□</button><button
-          class="win-btn btn-close">✕</button>
-      </div>
-    </div>
-    <iframe id="terminal-iframe" src="pages/home.html" class="terminal-iframe"
-      title="Windows PowerShell — Daniel Lee Portfolio Terminal" allowfullscreen loading="lazy"></iframe>
-    <div class="resize-handle nw"></div>
-    <div class="resize-handle ne"></div>
-    <div class="resize-handle sw"></div>
-    <div class="resize-handle se"></div>
-  </div>
-
-  <!-- 11. CONTROL PANEL WINDOW -->
-  <div class="window closed minimized" id="win-settings" style="top: 90px; left: 340px; width: 700px; height: 480px;">
-    <div class="window-titlebar">
-      <div class="titlebar-info">
-        <span class="titlebar-icon">⚙️</span>
-        <span class="titlebar-title">Control Panel — System Properties</span>
-      </div>
-      <div class="window-controls">
-        <button class="win-btn btn-min">_</button><button class="win-btn btn-max">□</button><button
-          class="win-btn btn-close">✕</button>
-      </div>
-    </div>
-    <div class="window-body">
-      <div class="xp-inset-box">
-        <h2 style="color: #003399;">DanielOS Control Panel</h2>
-        <div class="content-card" style="margin-top: 12px;">
-          <h3>System Properties</h3>
-          <ul style="list-style: none; display: flex; flex-direction: column; gap: 8px; font-size: 11px;">
-            <li><strong>System:</strong> DanielOS Professional [v2.3]</li>
-            <li><strong>Developer:</strong> Seung Sik (Daniel) Lee — Computer Engineer @ TAMU</li>
-            <li><strong>Current Role:</strong> Software Systems Engineering Technician @ US Modules</li>
-            <li><strong>Theme:</strong> XP Luna Blue / Low-Poly Landscape</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <div class="resize-handle nw"></div>
-    <div class="resize-handle ne"></div>
-    <div class="resize-handle sw"></div>
-    <div class="resize-handle se"></div>
-  </div>
-
-  <!-- 12. WINVER DIALOG WINDOW -->
-  <div class="window closed minimized" id="win-winver"
-    style="top: 140px; left: 260px; width: 440px; height: 320px; z-index: 900;">
-    <div class="window-titlebar">
-      <div class="titlebar-info">
-        <span class="titlebar-icon">⚙️</span>
-        <span class="titlebar-title">About DanielOS</span>
-      </div>
-      <div class="window-controls">
-        <button class="win-btn btn-close">✕</button>
-      </div>
-    </div>
-    <div class="window-body">
-      <div class="xp-inset-box" style="text-align: center;">
-        <h2 style="color: #003399; font-size: 18px;">DanielOS Professional</h2>
-        <p style="margin-top: 4px; font-weight: bold;">Version 2.3 (Build 2600.xpsp_sp3)</p>
-        <p style="margin-top: 8px; color: #555;">Inspired by Windows XP • Seung Sik (Daniel) Lee Portfolio</p>
-        <p style="margin-top: 12px; font-size: 10px; color: #777;">(c) 2026 Seung Sik Lee. B.S. Computer Engineering @
-          Texas A&amp;M University.</p>
-        <button class="action-btn" id="winver-ok-btn" style="margin-top: 16px; padding: 4px 20px;">OK</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 13. RECYCLE BIN WINDOW -->
-  <div class="window closed minimized" id="win-trash" style="top: 120px; left: 320px; width: 540px; height: 380px;">
-    <div class="window-titlebar">
-      <div class="titlebar-info">
-        <span class="titlebar-icon">🗑️</span>
-        <span class="titlebar-title">Recycle Bin</span>
-      </div>
-      <div class="window-controls">
-        <button class="win-btn btn-min">_</button><button class="win-btn btn-max">□</button><button
-          class="win-btn btn-close">✕</button>
-      </div>
-    </div>
-    <div class="window-body">
-      <div class="xp-inset-box">
-        <h2 style="color: #003399;">Recycle Bin</h2>
-        <ul style="list-style: none; margin-top: 12px; display: flex; flex-direction: column; gap: 8px;">
-          <li style="display: flex; align-items: center; gap: 8px;">📄 <span>old_boring_portfolio_v1.html</span></li>
-          <li style="display: flex; align-items: center; gap: 8px;">🐛 <span>null_pointer_exception.log</span></li>
-          <li style="display: flex; align-items: center; gap: 8px;">☕ <span>empty_coffee_cup.obj</span></li>
-        </ul>
-      </div>
-    </div>
-    <div class="resize-handle nw"></div>
-    <div class="resize-handle ne"></div>
-    <div class="resize-handle sw"></div>
-    <div class="resize-handle se"></div>
-  </div>
-
-  <!-- 14. MUHAN MAESU TRADING APP WINDOW -->
-  <div class="window closed minimized maximized" id="win-muhan-maesu" style="top: 40px; left: 140px; width: 980px; height: 620px;">
-    <div class="window-titlebar" style="background: linear-gradient(180deg, #004080 0%, #002b55 100%);">
-      <div class="titlebar-info">
-        <span class="titlebar-icon">📈</span>
-        <span class="titlebar-title">Muhan Maesu — Quantitative Alpaca Trading Platform (https://muhan-maesu.onrender.com)</span>
-      </div>
-      <div class="window-controls">
-        <button class="win-btn btn-min" title="Minimize">_</button>
-        <button class="win-btn btn-max" title="Maximize">□</button>
-        <button class="win-btn btn-close" title="Close">✕</button>
-      </div>
-    </div>
-    
-    <div class="web-browser-toolbar">
-      <div class="toolbar-nav-buttons">
-        <button class="action-btn" id="muhan-maesu-refresh-btn" title="Refresh App">🔄 Refresh</button>
-        <a class="action-btn" href="https://muhan-maesu.onrender.com/" target="_blank" rel="noopener noreferrer" title="Open in External Browser Tab" style="text-decoration: none; color: inherit; display: inline-flex; align-items: center; gap: 4px;">
-          <span>↗️ Open External</span>
-        </a>
-      </div>
-      <div class="toolbar-address-box">
-        <span class="address-lock-icon">🔒</span>
-        <input type="text" readonly value="https://muhan-maesu.onrender.com/" class="address-input" />
-      </div>
-      <div class="toolbar-status-badge">
-        <span class="status-dot"></span> Alpaca Live Trading Ready
-      </div>
-    </div>
-
-    <div class="window-body" style="padding: 0; display: flex; flex-direction: column; overflow: hidden; background: #0e1117;">
-      <iframe id="muhan-maesu-iframe" src="https://muhan-maesu.onrender.com/" class="app-iframe"
-        title="Muhan Maesu Alpaca Trading App" allow="clipboard-write; clipboard-read; autoplay" loading="lazy" style="flex: 1; width: 100%; border: none;"></iframe>
-    </div>
-
-    <div class="resize-handle nw"></div>
-    <div class="resize-handle ne"></div>
-    <div class="resize-handle sw"></div>
-    <div class="resize-handle se"></div>
-    <div class="resize-handle n"></div>
-    <div class="resize-handle s"></div>
-    <div class="resize-handle e"></div>
-    <div class="resize-handle w"></div>
-  </div>
-
-  </div>
-
-  </main>
-
-  <!-- START MENU -->
-  <div class="start-menu" id="start-menu">
-    <div class="start-menu-header">
-      <div class="user-avatar">SL</div>
-      <span class="user-name">Seung Sik (Daniel) Lee</span>
-    </div>
-
-    <div class="start-menu-columns">
-      <div class="start-column-left">
-        <div class="start-item" data-window="win-resume"><span class="start-item-icon">📜</span><span
-            class="start-item-text">Resume.pdf</span></div>
-        <div class="start-item" data-window="win-vscode"><span class="start-item-icon">📝</span><span
-            class="start-item-text">VS Code Editor</span></div>
-        <div class="start-item" data-window="win-contact"><span class="start-item-icon">🌐</span><span
-            class="start-item-text">Portfolio Browser</span></div>
-        <div class="start-divider"></div>
-        <div class="start-item" data-window="win-about"><span class="start-item-icon">👤</span><span
-            class="start-item-text">About Daniel</span></div>
-        <div class="start-item" data-window="win-projects"><span class="start-item-icon">📂</span><span
-            class="start-item-text">Projects Explorer</span></div>
-        <div class="start-item" data-window="win-terminal"><span class="start-item-icon">⚡</span><span
-            class="start-item-text">PowerShell Terminal</span></div>
-        <div class="start-item" data-window="win-muhan-maesu"><span class="start-item-icon">📈</span><span
-            class="start-item-text">Muhan Maesu Trading</span></div>
-      </div>
-
-      <div class="start-column-right">
-        <div class="start-item" data-window="win-winver"><span class="start-item-icon">⚙️</span><span
-            class="start-item-text">About DanielOS</span></div>
-        <div class="start-item" data-window="win-settings"><span class="start-item-icon">🛠️</span><span
-            class="start-item-text">Control Panel</span></div>
-      </div>
-    </div>
-
-    <div class="start-menu-footer">
-      <button class="xp-footer-btn" id="start-power-btn"><span>⏻</span> <span>Turn Off Computer</span></button>
-    </div>
-  </div>
-
-  <!-- MAIN DANIELOS TASKBAR -->
-  <footer class="taskbar" id="taskbar">
-    <div class="taskbar-left">
-      <button class="start-button" id="start-button">
-        <img src="images/logos/windows-xp.webp" class="start-logo-img" alt="Windows XP Logo" />
-        <span class="start-text-label">start</span>
-      </button>
-    </div>
-
-    <div class="taskbar-apps" id="taskbar-apps"></div>
-
-    <div class="system-tray" id="system-tray">
-      <span class="tray-icon" id="tray-network-btn" title="Network Connected: 1.0 Gbps">📶</span>
-      <span class="tray-icon" id="tray-volume-btn" title="Volume: 80%">🔊</span>
-      <div class="clock-display" id="tray-clock-btn" title="Click for Date &amp; Time Properties"><span id="clock-time">10:37 AM</span></div>
-    </div>
-  </footer>
-
-  <!-- SYSTEM TRAY POPUPS -->
-  <!-- 1. Master Volume Popover -->
-  <div class="tray-popup tray-volume-popover" id="tray-volume-popup">
-    <div class="popover-title">Volume</div>
-    <div class="volume-slider-box">
-      <span class="vol-icon">🔊</span>
-      <input type="range" id="tray-vol-slider" min="0" max="100" value="80" class="volume-slider" />
-    </div>
-    <div class="vol-percentage" id="tray-vol-label">80%</div>
-    <label class="vol-mute-checkbox">
-      <input type="checkbox" id="tray-vol-mute" /> Mute
-    </label>
-  </div>
-
-  <!-- 2. Date & Time Properties Window -->
-  <div class="window closed minimized tray-window" id="win-datetime" style="top: 100px; left: 50%; transform: translateX(-50%); width: 440px; height: 380px; z-index: 9900;">
-    <div class="window-titlebar">
-      <div class="titlebar-info"><span class="titlebar-icon">🕒</span><span class="titlebar-title">Date and Time Properties</span></div>
-      <div class="window-controls"><button class="win-btn btn-close">✕</button></div>
-    </div>
-    <div class="window-body" style="padding: 12px; background: var(--xp-window-bg);">
-      <div class="xp-tab-container">
-        <div class="xp-tab-header"><div class="xp-tab active">Date &amp; Time</div></div>
-        <div class="xp-tab-body" style="display: flex; gap: 16px; padding: 12px; background: #fff; border: 1px solid #7f9db9; border-top: none;">
-          <div class="calendar-section" style="flex: 1;">
-            <div class="calendar-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-              <button class="action-btn" id="cal-prev-btn" style="padding: 1px 6px;">&lt;</button>
-              <strong id="cal-month-year-label" style="font-size: 12px; color: #003399;">August 2026</strong>
-              <button class="action-btn" id="cal-next-btn" style="padding: 1px 6px;">&gt;</button>
-            </div>
-            <table class="calendar-table" style="width: 100%; border-collapse: collapse; text-align: center; font-size: 11px;">
-              <thead>
-                <tr style="color: #555; font-weight: bold;">
-                  <td>S</td><td>M</td><td>T</td><td>W</td><td>T</td><td>F</td><td>S</td>
-                </tr>
-              </thead>
-              <tbody id="calendar-days-body"></tbody>
-            </table>
-          </div>
-          <div class="clock-section" style="width: 140px; display: flex; flex-direction: column; align-items: center; justify-content: center; border-left: 1px solid #e0e0e0; padding-left: 12px;">
-            <div class="analog-clock-circle" id="analog-clock" style="width: 90px; height: 90px; border: 3px solid #0053ee; border-radius: 50%; position: relative; background: #fdfdfd; margin-bottom: 8px;">
-              <div id="hand-hour" style="position: absolute; width: 4px; height: 26px; background: #000; top: 19px; left: 43px; transform-origin: bottom center;"></div>
-              <div id="hand-minute" style="position: absolute; width: 3px; height: 34px; background: #0053ee; top: 11px; left: 43.5px; transform-origin: bottom center;"></div>
-              <div id="hand-second" style="position: absolute; width: 1px; height: 38px; background: #e81123; top: 7px; left: 44.5px; transform-origin: bottom center;"></div>
-              <div style="position: absolute; width: 8px; height: 8px; background: #000; border-radius: 50%; top: 41px; left: 41px;"></div>
-            </div>
-            <div style="font-weight: bold; font-size: 12px; color: #003399;" id="digital-clock-dialog">10:37:00 AM</div>
-          </div>
-        </div>
-        <div style="margin-top: 10px; font-size: 11px; color: #555;">
-          Time Zone: <strong>(UTC-06:00) Central Time (US &amp; Canada)</strong>
-        </div>
-      </div>
-      <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px;">
-        <button class="action-btn" id="datetime-ok-btn" style="min-width: 70px;">OK</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 3. Local Area Connection Status Dialog -->
-  <div class="window closed minimized tray-window" id="win-network" style="top: 120px; left: 50%; transform: translateX(-50%); width: 380px; height: 340px; z-index: 9900;">
-    <div class="window-titlebar">
-      <div class="titlebar-info"><span class="titlebar-icon">📶</span><span class="titlebar-title">Local Area Connection Status</span></div>
-      <div class="window-controls"><button class="win-btn btn-close">✕</button></div>
-    </div>
-    <div class="window-body" style="padding: 12px; background: var(--xp-window-bg);">
-      <div class="xp-tab-container">
-        <div class="xp-tab-header"><div class="xp-tab active">General</div></div>
-        <div class="xp-tab-body" style="padding: 12px; background: #fff; border: 1px solid #7f9db9; border-top: none;">
-          <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 12px;">
-            <span style="font-size: 32px;">📶</span>
-            <div>
-              <div style="font-weight: bold; font-size: 12px; color: #003399;">DanielOS High-Speed Network</div>
-              <div style="color: #666; font-size: 10.5px;">Connected to Internet</div>
-            </div>
-          </div>
-          <fieldset style="border: 1px solid #b4d0f5; padding: 8px 12px; border-radius: 3px; font-size: 11px; margin-bottom: 10px;">
-            <legend style="color: #003399; font-weight: bold; padding: 0 4px;">Connection Status</legend>
-            <div style="display: grid; grid-template-columns: 100px 1fr; gap: 4px; font-size: 11px;">
-              <span>Status:</span><strong>Connected</strong>
-              <span>Duration:</span><strong id="net-duration">02:45:18</strong>
-              <span>Speed:</span><strong>1.0 Gbps (Gigabit Ethernet)</strong>
-              <span>IP Address:</span><strong>192.168.1.105 (DHCP)</strong>
-            </div>
-          </fieldset>
-          <fieldset style="border: 1px solid #b4d0f5; padding: 8px 12px; border-radius: 3px; font-size: 11px;">
-            <legend style="color: #003399; font-weight: bold; padding: 0 4px;">Activity</legend>
-            <div style="display: flex; justify-content: space-around; text-align: center;">
-              <div>
-                <div style="color: #555;">Sent</div>
-                <strong style="color: #2e7d32;" id="net-sent-pkts">14,280</strong> bytes
-              </div>
-              <div style="font-size: 18px;">⇄</div>
-              <div>
-                <div style="color: #555;">Received</div>
-                <strong style="color: #0053ee;" id="net-recv-pkts">48,920</strong> bytes
+                <div class="tech-tags" style="margin-top: 12px;">
+                  <span class="tech-tag">Python 3</span>
+                  <span class="tech-tag">ThreadPoolExecutor</span>
+                  <span class="tech-tag">pandas</span>
+                  <span class="tech-tag">openpyxl</span>
+                  <span class="tech-tag">pywin32 (Win32 COM)</span>
+                  <span class="tech-tag">numpy busday</span>
+                  <span class="tech-tag">Power BI (.pbix)</span>
+                </div>
               </div>
             </div>
-          </fieldset>
+          </div>
+          <div class="resize-handle nw"></div>
+          <div class="resize-handle ne"></div>
+          <div class="resize-handle sw"></div>
+          <div class="resize-handle se"></div>
+        </div>
+
+        <!-- 5. NESTED PROJECT: YOLO OBJECT DETECTION WITH VIDEO DEMO & DISCLAIMER -->
+        <div class="window closed minimized" id="win-project-yolo"
+          style="top: 110px; left: 260px; width: 760px; height: 540px;">
+          <div class="window-titlebar">
+            <div class="titlebar-info"><span class="titlebar-icon">📹</span><span class="titlebar-title">Projects —
+                C:\SSLOS\Projects\YOLO Object Detection</span></div>
+            <div class="window-controls"><button class="win-btn btn-min">_</button><button
+                class="win-btn btn-max">□</button><button class="win-btn btn-close">✕</button></div>
+          </div>
+          <div class="window-body">
+            <div class="xp-inset-box">
+              <h2 style="color: #003399;">YOLO Object Detection on TFA Videos</h2>
+              <p style="margin-top: 4px; color: #555; font-weight: bold;">C++, Vitis AI, OpenCV, YOLOv4-Tiny (Aug 2025 –
+                Dec
+                2025)</p>
+
+              <!-- REAL-TIME VIDEO DEMONSTRATION -->
+              <div class="content-card" style="margin-top: 12px;">
+                <h3>📹 Real-Time Detection Video Demonstration</h3>
+                <video controls autoplay loop muted
+                  style="width: 100%; max-height: 280px; border-radius: 4px; border: 1px solid #003399; margin-top: 6px; background: #000;">
+                  <source src="videos-slash-clips/yolovideo.mp4" type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
+                <p
+                  style="font-size: 11px; color: #555; margin-top: 6px; font-style: italic; background: #fffbe6; border: 1px solid #ffe58f; padding: 6px 10px; border-radius: 3px;">
+                  ⚠️ <strong>Disclaimer:</strong> Video demonstration recorded &amp; produced by another teammate for
+                  TFA
+                  object detection hardware testing.
+                </p>
+              </div>
+
+              <div class="content-card" style="margin-top: 12px;">
+                <h3>Key Technical Achievements</h3>
+                <ul style="list-style: square; padding-left: 18px;">
+                  <li>Developed an object detection pipeline using specialized YOLO models for drones, vehicles, and
+                    humans to
+                    improve per-class accuracy.</li>
+                  <li>Designed and tested real-time detection on video input, optimizing system performance for
+                    constrained
+                    hardware.</li>
+                  <li>Trained models with custom datasets and validated performance through iterative test procedures.
+                  </li>
+                </ul>
+                <div class="tech-tags" style="margin-top: 8px;">
+                  <span class="tech-tag">C++</span><span class="tech-tag">Vitis AI</span><span
+                    class="tech-tag">OpenCV</span><span class="tech-tag">YOLOv4-Tiny</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="resize-handle nw"></div>
+          <div class="resize-handle ne"></div>
+          <div class="resize-handle sw"></div>
+          <div class="resize-handle se"></div>
+        </div>
+
+        <!-- 6. NESTED PROJECT: UE5 ROGUELITE GAME WITH DIRECT LINK -->
+        <div class="window closed minimized" id="win-project-roguelite"
+          style="top: 120px; left: 280px; width: 760px; height: 500px;">
+          <div class="window-titlebar">
+            <div class="titlebar-info"><span class="titlebar-icon">🎮</span><span class="titlebar-title">Projects —
+                C:\SSLOS\Projects\UE5 Roguelite Game</span></div>
+            <div class="window-controls"><button class="win-btn btn-min">_</button><button
+                class="win-btn btn-max">□</button><button class="win-btn btn-close">✕</button></div>
+          </div>
+          <div class="window-body">
+            <div class="xp-inset-box" style="text-align: center;">
+              <h2 style="color: #003399;">Roguelite Game Development (KitKatch)</h2>
+              <p style="margin-top: 4px; color: #555; font-weight: bold;">Unreal Engine 5, Blueprints, Git (Jan 2026 –
+                Present)</p>
+
+              <div class="content-card" style="margin-top: 14px; text-align: left;">
+                <h3>Game Systems &amp; Features</h3>
+                <ul style="list-style: square; padding-left: 18px;">
+                  <li>Developing a complex 3D roguelite within Unreal Engine 5, focusing on modular inventory systems
+                    and
+                    weapon attachment frameworks.</li>
+                  <li>Architected player controller logic and dynamic UI drag-and-drop systems using Blueprints and Data
+                    Assets.</li>
+                  <li>Collaborating in a team environment to iterate on gameplay mechanics, utilizing Git for version
+                    control.
+                  </li>
+                </ul>
+              </div>
+
+              <div style="margin-top: 20px;">
+                <a href="https://kitkatch.itch.io/kitkatch" target="_blank" class="action-btn"
+                  style="font-size: 14px; padding: 10px 24px; text-decoration: none;">
+                  🚀 Launch UE5 Roguelite Game on itch.io (kitkatch.itch.io/kitkatch)
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="resize-handle nw"></div>
+          <div class="resize-handle ne"></div>
+          <div class="resize-handle sw"></div>
+          <div class="resize-handle se"></div>
+        </div>
+
+        <!-- 7. NESTED PROJECT: AWS CLOUD PORTFOLIO -->
+        <div class="window closed minimized" id="win-project-aws"
+          style="top: 130px; left: 300px; width: 760px; height: 500px;">
+          <div class="window-titlebar">
+            <div class="titlebar-info"><span class="titlebar-icon">☁️</span><span class="titlebar-title">Projects —
+                C:\SSLOS\Projects\AWS Cloud Portfolio</span></div>
+            <div class="window-controls"><button class="win-btn btn-min">_</button><button
+                class="win-btn btn-max">□</button><button class="win-btn btn-close">✕</button></div>
+          </div>
+          <div class="window-body">
+            <div class="xp-inset-box">
+              <h2 style="color: #003399;">AWS Cloud Portfolio Website</h2>
+              <p style="margin-top: 4px; color: #555;">AWS (S3, CloudFront, Route 53), GitHub Actions, HTML/CSS (April
+                2026 –
+                June 2026)</p>
+              <div class="content-card" style="margin-top: 12px;">
+                <ul style="list-style: square; padding-left: 18px;">
+                  <li>Engineered a high-availability portfolio website using AWS S3 for static hosting and CloudFront as
+                    a CDN
+                    for global distribution.</li>
+                  <li>Managed DNS records and SSL/TLS certificates via Route 53 and AWS Certificate Manager to ensure
+                    secure,
+                    low-latency user access.</li>
+                  <li>Automated the deployment pipeline using GitHub Actions to synchronize repository changes directly
+                    to the
+                    S3 bucket upon push.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="resize-handle nw"></div>
+          <div class="resize-handle ne"></div>
+          <div class="resize-handle sw"></div>
+          <div class="resize-handle se"></div>
+        </div>
+
+        <!-- 8. INTERACTIVE VS CODE APPLICATION WINDOW -->
+        <div class="window closed minimized" id="win-vscode"
+          style="top: 50px; left: 160px; width: 840px; height: 540px;">
+          <div class="window-titlebar" style="background: #3c3c3c;">
+            <div class="titlebar-info">
+              <span class="titlebar-icon">📝</span>
+              <span class="titlebar-title">Visual Studio Code — Seung Sik Lee Workspace</span>
+            </div>
+            <div class="window-controls">
+              <button class="win-btn btn-min">_</button><button class="win-btn btn-max">□</button><button
+                class="win-btn btn-close">✕</button>
+            </div>
+          </div>
+          <div class="vscode-window-body">
+            <!-- VS Code Left Sidebar -->
+            <div class="vscode-sidebar">
+              <div class="vscode-sidebar-title">Explorer</div>
+              <div class="vscode-file-tree">
+                <div class="tree-item" style="font-weight: bold;">📁 SSLOS-Portfolio</div>
+                <div class="tree-item tree-indent tab-trigger active" data-file="readme">📄 README.md</div>
+                <div class="tree-item tree-indent tab-trigger" data-file="zoho">⚙️ run_pipeline.py</div>
+                <div class="tree-item tree-indent tab-trigger" data-file="resume">📜 resume.txt</div>
+                <div class="tree-item tree-indent tab-trigger" data-file="raytracer">⚙️ yolo_detector.cpp</div>
+                <div class="tree-item tree-indent tab-trigger" data-file="contact">✉️ contact.json</div>
+              </div>
+            </div>
+
+            <!-- VS Code Editor Tab Area -->
+            <div class="vscode-editor-area">
+              <div class="vscode-tabs-bar">
+                <div class="vscode-tab active" id="vsc-tab-label"><span>📄 README.md</span> <span
+                    class="tab-close-icon">✕</span></div>
+              </div>
+              <div class="vscode-code-content" id="vsc-code-content">
+                <!-- Rendered syntax highlighted code or markdown -->
+              </div>
+            </div>
+          </div>
+          <div class="resize-handle nw"></div>
+          <div class="resize-handle ne"></div>
+          <div class="resize-handle sw"></div>
+          <div class="resize-handle se"></div>
+        </div>
+
+        <!-- 9. PORTFOLIO BROWSER / CONTACT WINDOW -->
+        <div class="window closed minimized" id="win-contact"
+          style="top: 100px; left: 260px; width: 620px; height: 440px;">
+          <div class="window-titlebar">
+            <div class="titlebar-info">
+              <span class="titlebar-icon">🌐</span>
+              <span class="titlebar-title">Portfolio Browser — Contact Seung Sik (Daniel) Lee</span>
+            </div>
+            <div class="window-controls">
+              <button class="win-btn btn-min">_</button><button class="win-btn btn-max">□</button><button
+                class="win-btn btn-close">✕</button>
+            </div>
+          </div>
+          <div class="window-body">
+            <div class="xp-inset-box">
+              <h2 style="color: #003399;">Connect with Seung Sik (Daniel) Lee</h2>
+              <div class="card-grid" style="grid-template-columns: 1fr; margin-top: 14px;">
+                <div class="content-card">
+                  <p><strong>📞 Phone:</strong> +1 (858) 209-8444</p>
+                  <p style="margin-top: 10px;"><strong>✉️ Email:</strong> <a href="mailto:seungsik.daniel.lee@gmail.com"
+                      style="color: #003399; font-weight: bold;">seungsik.daniel.lee@gmail.com</a></p>
+                  <p style="margin-top: 10px;"><strong>💼 LinkedIn:</strong> <a href="https://linkedin.com/in/ssiklee"
+                      target="_blank" style="color: #003399; font-weight: bold;">linkedin.com/in/ssiklee</a></p>
+                  <p style="margin-top: 10px;"><strong>📍 Location:</strong> College Station, TX</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="resize-handle nw"></div>
+          <div class="resize-handle ne"></div>
+          <div class="resize-handle sw"></div>
+          <div class="resize-handle se"></div>
+        </div>
+
+        <!-- 10. POWERSHELL TERMINAL WINDOW -->
+        <div class="window closed minimized" id="win-terminal"
+          style="top: 40px; left: 160px; width: 900px; height: 580px;">
+          <div class="window-titlebar">
+            <div class="titlebar-info">
+              <span class="titlebar-icon">⚡</span>
+              <span class="titlebar-title">Windows PowerShell — Daniel Lee [C:\Users\DanielLee]</span>
+            </div>
+            <div class="window-controls">
+              <button class="win-btn btn-min">_</button><button class="win-btn btn-max">□</button><button
+                class="win-btn btn-close">✕</button>
+            </div>
+          </div>
+          <iframe id="terminal-iframe" src="pages/home.html" class="terminal-iframe"
+            title="Windows PowerShell — Daniel Lee Portfolio Terminal" allowfullscreen loading="lazy"></iframe>
+          <div class="resize-handle nw"></div>
+          <div class="resize-handle ne"></div>
+          <div class="resize-handle sw"></div>
+          <div class="resize-handle se"></div>
+        </div>
+
+        <!-- 11. CONTROL PANEL WINDOW -->
+        <div class="window closed minimized" id="win-settings"
+          style="top: 90px; left: 340px; width: 700px; height: 480px;">
+          <div class="window-titlebar">
+            <div class="titlebar-info">
+              <span class="titlebar-icon">⚙️</span>
+              <span class="titlebar-title">Control Panel — System Properties</span>
+            </div>
+            <div class="window-controls">
+              <button class="win-btn btn-min">_</button><button class="win-btn btn-max">□</button><button
+                class="win-btn btn-close">✕</button>
+            </div>
+          </div>
+          <div class="window-body">
+            <div class="xp-inset-box">
+              <h2 style="color: #003399;">SSLOS Control Panel</h2>
+              <div class="content-card" style="margin-top: 12px;">
+                <h3>System Properties</h3>
+                <ul style="list-style: none; display: flex; flex-direction: column; gap: 8px; font-size: 11px;">
+                  <li><strong>System:</strong> SSLOS Professional [v2.3]</li>
+                  <li><strong>Developer:</strong> Seung Sik (Daniel) Lee — Computer Engineer @ TAMU</li>
+                  <li><strong>Current Role:</strong> Software Systems Engineering Technician @ US Modules</li>
+                  <li><strong>Theme:</strong> XP Luna Blue / Low-Poly Landscape</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="resize-handle nw"></div>
+          <div class="resize-handle ne"></div>
+          <div class="resize-handle sw"></div>
+          <div class="resize-handle se"></div>
+        </div>
+
+        <!-- 12. WINVER DIALOG WINDOW -->
+        <div class="window closed minimized" id="win-winver"
+          style="top: 140px; left: 260px; width: 440px; height: 320px; z-index: 900;">
+          <div class="window-titlebar">
+            <div class="titlebar-info">
+              <span class="titlebar-icon">⚙️</span>
+              <span class="titlebar-title">About SSLOS</span>
+            </div>
+            <div class="window-controls">
+              <button class="win-btn btn-close">✕</button>
+            </div>
+          </div>
+          <div class="window-body">
+            <div class="xp-inset-box" style="text-align: center;">
+              <h2 style="color: #003399; font-size: 18px;">SSLOS Professional</h2>
+              <p style="margin-top: 4px; font-weight: bold;">Version 2.3 (Build 2600.xpsp_sp3)</p>
+              <p style="margin-top: 8px; color: #555;">Inspired by Windows XP • Seung Sik (Daniel) Lee Portfolio</p>
+              <p style="margin-top: 12px; font-size: 10px; color: #777;">(c) 2026 Seung Sik Lee. B.S. Computer
+                Engineering @
+                Texas A&amp;M University.</p>
+              <button class="action-btn" id="winver-ok-btn" style="margin-top: 16px; padding: 4px 20px;">OK</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 13. RECYCLE BIN WINDOW -->
+        <div class="window closed minimized" id="win-trash"
+          style="top: 120px; left: 320px; width: 540px; height: 380px;">
+          <div class="window-titlebar">
+            <div class="titlebar-info">
+              <span class="titlebar-icon">🗑️</span>
+              <span class="titlebar-title">Recycle Bin</span>
+            </div>
+            <div class="window-controls">
+              <button class="win-btn btn-min">_</button><button class="win-btn btn-max">□</button><button
+                class="win-btn btn-close">✕</button>
+            </div>
+          </div>
+          <div class="window-body">
+            <div class="xp-inset-box">
+              <h2 style="color: #003399;">Recycle Bin</h2>
+              <ul style="list-style: none; margin-top: 12px; display: flex; flex-direction: column; gap: 8px;">
+                <li style="display: flex; align-items: center; gap: 8px;">📄 <span>old_boring_portfolio_v1.html</span>
+                </li>
+                <li style="display: flex; align-items: center; gap: 8px;">🐛 <span>null_pointer_exception.log</span>
+                </li>
+                <li style="display: flex; align-items: center; gap: 8px;">☕ <span>empty_coffee_cup.obj</span></li>
+              </ul>
+            </div>
+          </div>
+          <div class="resize-handle nw"></div>
+          <div class="resize-handle ne"></div>
+          <div class="resize-handle sw"></div>
+          <div class="resize-handle se"></div>
+        </div>
+
+        <!-- 14. MUHAN MAESU TRADING APP WINDOW -->
+        <div class="window closed minimized maximized" id="win-muhan-maesu"
+          style="top: 40px; left: 140px; width: 980px; height: 620px;">
+          <div class="window-titlebar" style="background: linear-gradient(180deg, #004080 0%, #002b55 100%);">
+            <div class="titlebar-info">
+              <span class="titlebar-icon">📈</span>
+              <span class="titlebar-title">Muhan Maesu — Quantitative Alpaca Trading Platform
+                (https://muhan-maesu.onrender.com)</span>
+            </div>
+            <div class="window-controls">
+              <button class="win-btn btn-min" title="Minimize">_</button>
+              <button class="win-btn btn-max" title="Maximize">□</button>
+              <button class="win-btn btn-close" title="Close">✕</button>
+            </div>
+          </div>
+
+          <div class="web-browser-toolbar">
+            <div class="toolbar-nav-buttons">
+              <button class="action-btn" id="muhan-maesu-refresh-btn" title="Refresh App">🔄 Refresh</button>
+              <a class="action-btn" href="https://muhan-maesu.onrender.com/" target="_blank" rel="noopener noreferrer"
+                title="Open in External Browser Tab"
+                style="text-decoration: none; color: inherit; display: inline-flex; align-items: center; gap: 4px;">
+                <span>↗️ Open External</span>
+              </a>
+            </div>
+            <div class="toolbar-address-box">
+              <span class="address-lock-icon">🔒</span>
+              <input type="text" readonly value="https://muhan-maesu.onrender.com/" class="address-input" />
+            </div>
+            <div class="toolbar-status-badge">
+              <span class="status-dot"></span> Alpaca Live Trading Ready
+            </div>
+          </div>
+
+          <div class="window-body"
+            style="padding: 0; display: flex; flex-direction: column; overflow: hidden; background: #0e1117;">
+            <iframe id="muhan-maesu-iframe" src="https://muhan-maesu.onrender.com/" class="app-iframe"
+              title="Muhan Maesu Alpaca Trading App" allow="clipboard-write; clipboard-read; autoplay" loading="lazy"
+              style="flex: 1; width: 100%; border: none;"></iframe>
+          </div>
+
+          <div class="resize-handle nw"></div>
+          <div class="resize-handle ne"></div>
+          <div class="resize-handle sw"></div>
+          <div class="resize-handle se"></div>
+          <div class="resize-handle n"></div>
+          <div class="resize-handle s"></div>
+          <div class="resize-handle e"></div>
+          <div class="resize-handle w"></div>
+        </div>
+
+        <!-- 15. MY HEART DATING COUNTER WINDOW -->
+        <div class="window closed minimized" id="win-my-heart"
+          style="top: 50px; left: 160px; width: 740px; height: 580px;">
+          <div class="window-titlebar" style="background: linear-gradient(180deg, #d61a4c 0%, #800028 100%);">
+            <div class="titlebar-info">
+              <span class="titlebar-icon">❤️</span>
+              <span class="titlebar-title">my ❤️ — Dating Day Counter</span>
+            </div>
+            <div class="window-controls">
+              <button class="win-btn btn-min" title="Minimize">_</button>
+              <button class="win-btn btn-max" title="Maximize">□</button>
+              <button class="win-btn btn-close" title="Close">✕</button>
+            </div>
+          </div>
+
+          <div class="web-browser-toolbar">
+            <div class="toolbar-nav-buttons">
+              <button class="action-btn" id="my-heart-refresh-btn" title="Refresh App"
+                onclick="if(window.updateInlineDatingCounter) window.updateInlineDatingCounter(); if(window.triggerInlineCelebration) window.triggerInlineCelebration('both');">🔄
+                Refresh</button>
+            </div>
+            <div class="toolbar-address-box">
+              <span class="address-lock-icon">🔒</span>
+              <input type="text" readonly value="https://sslos.local/my-heart" class="address-input" />
+            </div>
+          </div>
+
+          <div class="window-body"
+            style="padding: 0; display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden; background: #0b060d; position: relative;">
+            <canvas id="myHeartFxCanvas"
+              style="position: absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:1;"></canvas>
+
+            <div
+              style="position: relative; z-index: 2; width: 100%; min-height: 100%; padding: 2rem 1.5rem; text-align: center; color: #f8fafc; font-family: 'Outfit', sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; background: radial-gradient(circle at 50% 20%, rgba(255, 51, 102, 0.15) 0%, transparent 60%);">
+
+              <div
+                style="display: inline-flex; align-items: center; gap: 8px; padding: 6px 18px; background: rgba(255, 51, 102, 0.15); border: 1px solid rgba(255, 51, 102, 0.3); border-radius: 50px; font-size: 0.95rem; font-weight: 500; color: #ff85a2; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1rem;">
+                <span style="color: #ff3366;">❤️</span> my love
+              </div>
+
+              <div
+                style="font-family: 'Playfair Display', serif; font-size: 2rem; font-style: italic; font-weight: 600; color: #ffd6e0; margin-bottom: 0.2rem;">
+                dating for</div>
+
+              <div style="margin: 0.5rem 0;">
+                <div id="inlineDayCounter"
+                  style="font-size: 5.5rem; font-weight: 800; line-height: 1; background: linear-gradient(135deg, #ffffff 20%, #ff85a2 60%, #ffd700 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 20px rgba(255, 51, 102, 0.4)); letter-spacing: -2px;">
+                  1000</div>
+              </div>
+
+              <div
+                style="font-family: 'Playfair Display', serif; font-size: 2.4rem; font-weight: 800; color: #ffffff; letter-spacing: 4px; text-transform: lowercase; margin-top: 0.2rem;">
+                days!!</div>
+
+              <div id="inlineMilestoneBanner"
+                style="display: none; margin-top: 1.5rem; padding: 0.8rem 1.2rem; background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 51, 102, 0.15)); border: 1px solid rgba(255, 215, 0, 0.4); border-radius: 16px; color: #ffe680; font-size: 1rem; font-weight: 600;">
+                <span id="inlineMilestoneText">✨ Happy 1000 Days Milestone! ✨</span>
+              </div>
+
+              <div style="margin-top: 2rem; display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+                <button class="action-btn" onclick="triggerInlineCelebration('fireworks')"
+                  style="background: linear-gradient(135deg, #ff3366, #e6004c); color: white; border: none; padding: 10px 22px; font-size: 0.95rem; font-weight: 600; border-radius: 50px; cursor: pointer; box-shadow: 0 6px 16px rgba(255, 51, 102, 0.4);">
+                  🎆 Replay Fireworks
+                </button>
+                <button class="action-btn" onclick="triggerInlineCelebration('confetti')"
+                  style="background: linear-gradient(135deg, #ffd700, #ffa500); color: #1a0f00; border: none; padding: 10px 22px; font-size: 0.95rem; font-weight: 600; border-radius: 50px; cursor: pointer; box-shadow: 0 6px 16px rgba(255, 215, 0, 0.3);">
+                  🎉 Confetti Burst
+                </button>
+              </div>
+
+              <div
+                style="margin-top: 2.5rem; width: 100%; border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 1.5rem;">
+                <div
+                  style="font-size: 0.85rem; color: #cbd5e1; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1rem;">
+                  📷 Memory Lane (Click to add photos)
+                </div>
+                <div
+                  style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; width: 100%; max-width: 520px; margin: 0 auto;">
+                  <div class="inline-photo-box" onclick="addInlinePhoto(1)" title="Click to swap Day 999 photo"
+                    style="height: 140px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 14px; overflow: hidden; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 6px 16px rgba(0,0,0,0.4); transition: transform 0.25s ease;">
+                    <img src="images/999.jpg" style="width: 100%; height: 100%; object-fit: cover; border-radius: 13px;" alt="Day 999 Memory Photo" />
+                  </div>
+                  <div class="inline-photo-box" onclick="addInlinePhoto(2)" title="Click to swap Day 1000 photo"
+                    style="height: 140px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 14px; overflow: hidden; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 6px 16px rgba(0,0,0,0.4); transition: transform 0.25s ease;">
+                    <img src="images/1000.jpg" style="width: 100%; height: 100%; object-fit: cover; border-radius: 13px;" alt="Day 1000 Memory Photo" />
+                  </div>
+                  <div class="inline-photo-box" onclick="addInlinePhoto(3)" title="Click to swap Day 1001 photo"
+                    style="height: 140px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 14px; overflow: hidden; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 6px 16px rgba(0,0,0,0.4); transition: transform 0.25s ease;">
+                    <img src="images/1001.jpg" style="width: 100%; height: 100%; object-fit: cover; border-radius: 13px;" alt="Day 1001 Memory Photo" />
+                  </div>
+                </div>
+              </div>
+
+              <div style="margin-top: 1.5rem; font-size: 0.8rem; color: rgba(255,255,255,0.35);">
+                Counting starting from Day 1 (Nov 10, 2023)
+              </div>
+            </div>
+          </div>
+
+          <div class="resize-handle nw"></div>
+          <div class="resize-handle ne"></div>
+          <div class="resize-handle sw"></div>
+          <div class="resize-handle se"></div>
+          <div class="resize-handle n"></div>
+          <div class="resize-handle s"></div>
+          <div class="resize-handle e"></div>
+          <div class="resize-handle w"></div>
+        </div>
+
+      </div>
+
+    </main>
+
+    <!-- START MENU -->
+    <div class="start-menu" id="start-menu">
+      <div class="start-menu-header">
+        <div class="user-avatar">SL</div>
+        <span class="user-name">Seung Sik (Daniel) Lee</span>
+      </div>
+
+      <div class="start-menu-columns">
+        <div class="start-column-left">
+          <div class="start-item" data-window="win-resume"><span class="start-item-icon">📜</span><span
+              class="start-item-text">Resume.pdf</span></div>
+          <div class="start-item" data-window="win-vscode"><span class="start-item-icon">📝</span><span
+              class="start-item-text">VS Code Editor</span></div>
+          <div class="start-item" data-window="win-contact"><span class="start-item-icon">🌐</span><span
+              class="start-item-text">Portfolio Browser</span></div>
+          <div class="start-divider"></div>
+          <div class="start-item" data-window="win-about"><span class="start-item-icon">👤</span><span
+              class="start-item-text">About Daniel</span></div>
+          <div class="start-item" data-window="win-projects"><span class="start-item-icon">📂</span><span
+              class="start-item-text">Projects Explorer</span></div>
+          <div class="start-item" data-window="win-terminal"><span class="start-item-icon">⚡</span><span
+              class="start-item-text">PowerShell Terminal</span></div>
+          <div class="start-item" data-window="win-muhan-maesu"><span class="start-item-icon">📈</span><span
+              class="start-item-text">Muhan Maesu Trading</span></div>
+          <div class="start-item" data-window="win-my-heart"><span class="start-item-icon">❤️</span><span
+              class="start-item-text">my ❤️</span></div>
+        </div>
+
+        <div class="start-column-right">
+          <div class="start-item" data-window="win-winver"><span class="start-item-icon">⚙️</span><span
+              class="start-item-text">About SSLOS</span></div>
+          <div class="start-item" data-window="win-settings"><span class="start-item-icon">🛠️</span><span
+              class="start-item-text">Control Panel</span></div>
         </div>
       </div>
-      <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px;">
-        <button class="action-btn" id="network-close-btn" style="min-width: 70px;">Close</button>
+
+      <div class="start-menu-footer">
+        <button class="xp-footer-btn" id="start-power-btn"><span>⏻</span> <span>Turn Off Computer</span></button>
       </div>
     </div>
-  </div>
+
+    <!-- MAIN SSLOS TASKBAR -->
+    <footer class="taskbar" id="taskbar">
+      <div class="taskbar-left">
+        <button class="start-button" id="start-button">
+          <img src="images/logos/windows-xp.webp" class="start-logo-img" alt="Windows XP Logo" />
+          <span class="start-text-label">start</span>
+        </button>
+      </div>
+
+      <div class="taskbar-apps" id="taskbar-apps"></div>
+
+      <div class="system-tray" id="system-tray">
+        <span class="tray-icon" id="tray-network-btn" title="Network Connected: 1.0 Gbps">📶</span>
+        <span class="tray-icon" id="tray-volume-btn" title="Volume: 80%">🔊</span>
+        <div class="clock-display" id="tray-clock-btn" title="Click for Date &amp; Time Properties"><span
+            id="clock-time">10:37 AM</span></div>
+      </div>
+    </footer>
+
+    <!-- SYSTEM TRAY POPUPS -->
+    <!-- 1. Master Volume Popover -->
+    <div class="tray-popup tray-volume-popover" id="tray-volume-popup">
+      <div class="popover-title">Volume</div>
+      <div class="volume-slider-box">
+        <span class="vol-icon">🔊</span>
+        <input type="range" id="tray-vol-slider" min="0" max="100" value="80" class="volume-slider" />
+      </div>
+      <div class="vol-percentage" id="tray-vol-label">80%</div>
+      <label class="vol-mute-checkbox">
+        <input type="checkbox" id="tray-vol-mute" /> Mute
+      </label>
+    </div>
+
+    <!-- 2. Date & Time Properties Window -->
+    <div class="window closed minimized tray-window" id="win-datetime"
+      style="top: 100px; left: 50%; transform: translateX(-50%); width: 440px; height: 380px; z-index: 9900;">
+      <div class="window-titlebar">
+        <div class="titlebar-info"><span class="titlebar-icon">🕒</span><span class="titlebar-title">Date and Time
+            Properties</span></div>
+        <div class="window-controls"><button class="win-btn btn-close">✕</button></div>
+      </div>
+      <div class="window-body" style="padding: 12px; background: var(--xp-window-bg);">
+        <div class="xp-tab-container">
+          <div class="xp-tab-header">
+            <div class="xp-tab active">Date &amp; Time</div>
+          </div>
+          <div class="xp-tab-body"
+            style="display: flex; gap: 16px; padding: 12px; background: #fff; border: 1px solid #7f9db9; border-top: none;">
+            <div class="calendar-section" style="flex: 1;">
+              <div class="calendar-header"
+                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <button class="action-btn" id="cal-prev-btn" style="padding: 1px 6px;">&lt;</button>
+                <strong id="cal-month-year-label" style="font-size: 12px; color: #003399;">August 2026</strong>
+                <button class="action-btn" id="cal-next-btn" style="padding: 1px 6px;">&gt;</button>
+              </div>
+              <table class="calendar-table"
+                style="width: 100%; border-collapse: collapse; text-align: center; font-size: 11px;">
+                <thead>
+                  <tr style="color: #555; font-weight: bold;">
+                    <td>S</td>
+                    <td>M</td>
+                    <td>T</td>
+                    <td>W</td>
+                    <td>T</td>
+                    <td>F</td>
+                    <td>S</td>
+                  </tr>
+                </thead>
+                <tbody id="calendar-days-body"></tbody>
+              </table>
+            </div>
+            <div class="clock-section"
+              style="width: 140px; display: flex; flex-direction: column; align-items: center; justify-content: center; border-left: 1px solid #e0e0e0; padding-left: 12px;">
+              <div class="analog-clock-circle" id="analog-clock"
+                style="width: 90px; height: 90px; border: 3px solid #0053ee; border-radius: 50%; position: relative; background: #fdfdfd; margin-bottom: 8px;">
+                <div id="hand-hour"
+                  style="position: absolute; width: 4px; height: 26px; background: #000; top: 19px; left: 43px; transform-origin: bottom center;">
+                </div>
+                <div id="hand-minute"
+                  style="position: absolute; width: 3px; height: 34px; background: #0053ee; top: 11px; left: 43.5px; transform-origin: bottom center;">
+                </div>
+                <div id="hand-second"
+                  style="position: absolute; width: 1px; height: 38px; background: #e81123; top: 7px; left: 44.5px; transform-origin: bottom center;">
+                </div>
+                <div
+                  style="position: absolute; width: 8px; height: 8px; background: #000; border-radius: 50%; top: 41px; left: 41px;">
+                </div>
+              </div>
+              <div style="font-weight: bold; font-size: 12px; color: #003399;" id="digital-clock-dialog">10:37:00 AM
+              </div>
+            </div>
+          </div>
+          <div style="margin-top: 10px; font-size: 11px; color: #555;">
+            Time Zone: <strong>(UTC-06:00) Central Time (US &amp; Canada)</strong>
+          </div>
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px;">
+          <button class="action-btn" id="datetime-ok-btn" style="min-width: 70px;">OK</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Local Area Connection Status Dialog -->
+    <div class="window closed minimized tray-window" id="win-network"
+      style="top: 120px; left: 50%; transform: translateX(-50%); width: 380px; height: 340px; z-index: 9900;">
+      <div class="window-titlebar">
+        <div class="titlebar-info"><span class="titlebar-icon">📶</span><span class="titlebar-title">Local Area
+            Connection Status</span></div>
+        <div class="window-controls"><button class="win-btn btn-close">✕</button></div>
+      </div>
+      <div class="window-body" style="padding: 12px; background: var(--xp-window-bg);">
+        <div class="xp-tab-container">
+          <div class="xp-tab-header">
+            <div class="xp-tab active">General</div>
+          </div>
+          <div class="xp-tab-body"
+            style="padding: 12px; background: #fff; border: 1px solid #7f9db9; border-top: none;">
+            <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 12px;">
+              <span style="font-size: 32px;">📶</span>
+              <div>
+                <div style="font-weight: bold; font-size: 12px; color: #003399;">SSLOS High-Speed Network</div>
+                <div style="color: #666; font-size: 10.5px;">Connected to Internet</div>
+              </div>
+            </div>
+            <fieldset
+              style="border: 1px solid #b4d0f5; padding: 8px 12px; border-radius: 3px; font-size: 11px; margin-bottom: 10px;">
+              <legend style="color: #003399; font-weight: bold; padding: 0 4px;">Connection Status</legend>
+              <div style="display: grid; grid-template-columns: 100px 1fr; gap: 4px; font-size: 11px;">
+                <span>Status:</span><strong>Connected</strong>
+                <span>Duration:</span><strong id="net-duration">02:45:18</strong>
+                <span>Speed:</span><strong>1.0 Gbps (Gigabit Ethernet)</strong>
+                <span>IP Address:</span><strong>192.168.1.105 (DHCP)</strong>
+              </div>
+            </fieldset>
+            <fieldset style="border: 1px solid #b4d0f5; padding: 8px 12px; border-radius: 3px; font-size: 11px;">
+              <legend style="color: #003399; font-weight: bold; padding: 0 4px;">Activity</legend>
+              <div style="display: flex; justify-content: space-around; text-align: center;">
+                <div>
+                  <div style="color: #555;">Sent</div>
+                  <strong style="color: #2e7d32;" id="net-sent-pkts">14,280</strong> bytes
+                </div>
+                <div style="font-size: 18px;">⇄</div>
+                <div>
+                  <div style="color: #555;">Received</div>
+                  <strong style="color: #0053ee;" id="net-recv-pkts">48,920</strong> bytes
+                </div>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px;">
+          <button class="action-btn" id="network-close-btn" style="min-width: 70px;">Close</button>
+        </div>
+      </div>
+    </div>
 
   </div>
 </body>

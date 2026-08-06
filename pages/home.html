@@ -7,11 +7,11 @@
   <meta name="description" content="Interactive PowerShell CLI Terminal Portfolio — Daniel Lee, B.S. Computer Engineering @ Texas A&M" />
   <link rel="stylesheet" href="terminal.css" />
   <script defer src="terminal.js"></script>
-  <!-- Iframe mode: hide duplicate chrome when embedded in DanielOS desktop -->
+  <!-- Iframe mode: hide duplicate chrome when embedded in SSLOS desktop -->
   <script>
     if (window !== window.top) {
       document.addEventListener('DOMContentLoaded', () => {
-        // Hide the inner titlebar (DanielOS already has one)
+        // Hide the inner titlebar (SSLOS already has one)
         const tb = document.querySelector('.terminal-titlebar');
         if (tb) tb.style.display = 'none';
         // Hide CRT overlays (they'd be clipped by the window frame anyway)
