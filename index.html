@@ -52,16 +52,34 @@
 
   <!-- SHUTDOWN SCREEN OVERLAY -->
   <div class="shutdown-screen" id="shutdown-screen">
-    <div class="shutdown-logo-box">
-      <img src="images/logos/windows-xp.webp"
-        style="height: 54px; width: auto; filter: drop-shadow(0 0 12px rgba(53,147,255,0.5));" alt="SSLOS Logo" />
-      <span class="shutdown-title">SSLOS <span style="font-size:15px;color:#ff9800;">v2.3</span></span>
-      <span class="shutdown-subtitle">It is now safe to turn off your computer.</span>
+    <div class="shutdown-content" id="shutdown-content">
+      <div class="shutdown-logo-box">
+        <img src="images/logos/windows-xp.webp"
+          style="height: 54px; width: auto; filter: drop-shadow(0 0 12px rgba(53,147,255,0.5));" alt="SSLOS Logo" />
+        <span class="shutdown-title">SSLOS <span style="font-size:15px;color:#ff9800;">v2.3</span></span>
+        <span class="shutdown-subtitle" id="shutdown-subtitle">SSLOS is shutting down...</span>
+      </div>
+      <div class="shutdown-progress-track">
+        <div class="shutdown-progress-fill" id="shutdown-progress-fill"></div>
+      </div>
+      <span class="shutdown-status" id="shutdown-status">Saving your settings...</span>
     </div>
-    <div class="shutdown-progress-track">
-      <div class="shutdown-progress-fill" id="shutdown-progress-fill"></div>
+
+    <!-- POST-SHUTDOWN / SAFE TO TURN OFF SCREEN -->
+    <div class="shutdown-off-screen hidden" id="shutdown-off-screen">
+      <div class="safe-off-banner">
+        <h1 class="safe-off-title">It is now safe to turn off your computer.</h1>
+        <p class="safe-off-subtext">SSLOS has powered down successfully.</p>
+        <div class="safe-off-actions">
+          <button class="safe-off-btn safe-off-close" id="shutdown-close-btn">
+            <span>✕</span> <span>Close Tab</span>
+          </button>
+          <button class="safe-off-btn safe-off-restart" id="shutdown-restart-btn">
+            <span>⚡</span> <span>Restart SSLOS</span>
+          </button>
+        </div>
+      </div>
     </div>
-    <span class="shutdown-status" id="shutdown-status">Saving your settings...</span>
   </div>
 
   <!-- MATRIX EASTER EGG CANVAS -->

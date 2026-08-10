@@ -75,6 +75,30 @@ document.addEventListener('DOMContentLoaded', () => {
         gain.connect(audioCtx.destination);
         osc.start();
         osc.stop(audioCtx.currentTime + 0.1);
+      } else if (type === 'shutdown') {
+        // Iconic Windows XP shutdown chime (descending harmonies: G#4+D#5 -> D#4+A#4 -> G#3+D#4 -> D#3+G#3)
+        const chords = [
+          { freqs: [415.30, 622.25], duration: 0.35, gain: 0.05 },
+          { freqs: [311.13, 466.16], duration: 0.35, gain: 0.05 },
+          { freqs: [207.65, 311.13], duration: 0.40, gain: 0.06 },
+          { freqs: [155.56, 207.65], duration: 0.80, gain: 0.07 }
+        ];
+        let offset = 0;
+        chords.forEach((chord) => {
+          chord.freqs.forEach(freq => {
+            const chordOsc = audioCtx.createOscillator();
+            const chordGain = audioCtx.createGain();
+            chordOsc.type = 'sine';
+            chordOsc.frequency.setValueAtTime(freq, audioCtx.currentTime + offset);
+            chordGain.gain.setValueAtTime(chord.gain * volMultiplier, audioCtx.currentTime + offset);
+            chordGain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + offset + chord.duration);
+            chordOsc.connect(chordGain);
+            chordGain.connect(audioCtx.destination);
+            chordOsc.start(audioCtx.currentTime + offset);
+            chordOsc.stop(audioCtx.currentTime + offset + chord.duration);
+          });
+          offset += 0.28;
+        });
       }
     } catch (e) {}
   }
@@ -1017,56 +1041,121 @@ LinkedIn: linkedin.com/in/ssiklee
   updateTaskbar();
 
   // ------------------------------------------------------------------------
-  // TURN OFF COMPUTER — SHUTDOWN SEQUENCE
+  // TURN OFF COMPUTER — SHUTDOWN SEQUENCE & AUTOMATIC TAB CLOSE
   // ------------------------------------------------------------------------
+  function attemptCloseTab() {
+    try {
+      window.open('', '_self', '');
+      window.close();
+    } catch (e) {}
+    try {
+      window.close();
+    } catch (e) {}
+    try {
+      self.close();
+    } catch (e) {}
+    try {
+      top.close();
+    } catch (e) {}
+  }
+
+  // Bind post-shutdown safe-off action buttons
+  const shutdownCloseBtn = document.getElementById('shutdown-close-btn');
+  const shutdownRestartBtn = document.getElementById('shutdown-restart-btn');
+
+  if (shutdownCloseBtn) {
+    shutdownCloseBtn.addEventListener('click', () => {
+      attemptCloseTab();
+      // If browser security blocks window.close() on user-typed URL tabs, redirect to clean blank state
+      setTimeout(() => {
+        try {
+          window.location.href = 'about:blank';
+        } catch (e) {}
+      }, 300);
+    });
+  }
+
+  if (shutdownRestartBtn) {
+    shutdownRestartBtn.addEventListener('click', () => {
+      sessionStorage.removeItem('sslos_booted');
+      window.location.reload();
+    });
+  }
+
   document.getElementById('start-power-btn')?.addEventListener('click', () => {
     // Close start menu if open
     document.getElementById('start-menu')?.classList.remove('open');
 
-    const screen    = document.getElementById('shutdown-screen');
-    const fill      = document.getElementById('shutdown-progress-fill');
-    const statusEl  = document.getElementById('shutdown-status');
+    const screen      = document.getElementById('shutdown-screen');
+    const contentBox  = document.getElementById('shutdown-content');
+    const offScreen   = document.getElementById('shutdown-off-screen');
+    const fill        = document.getElementById('shutdown-progress-fill');
+    const statusEl    = document.getElementById('shutdown-status');
+    const subtitleEl  = document.getElementById('shutdown-subtitle');
 
     if (!screen || !fill || !statusEl) return;
 
-    // Play a closing sound
-    playSound('close');
+    // Reset overlay elements
+    screen.classList.remove('powered-off');
+    if (contentBox) contentBox.classList.remove('crt-poweroff');
+    if (offScreen) offScreen.classList.add('hidden');
+    if (subtitleEl) subtitleEl.textContent = 'SSLOS is shutting down...';
+
+    // Play iconic XP shutdown sound chime
+    playSound('shutdown');
 
     // Activate overlay (fade in)
     screen.classList.add('active');
 
-    // Status messages that cycle like a real XP shutdown
-    const messages = [
-      'Saving your settings...',
-      'Closing all programs...',
-      'Logging off...',
-      'Shutting down SSLOS...',
-      'Goodbye, and thanks for visiting! 👋'
+    // Status sequence and corresponding progress values
+    const steps = [
+      { msg: 'Saving your settings...', progress: 20, delay: 700 },
+      { msg: 'Closing active programs...', progress: 45, delay: 750, action: () => {
+        // Gracefully minimize/close all open desktop windows
+        document.querySelectorAll('.window').forEach(win => {
+          win.classList.add('closed', 'minimized');
+          win.classList.remove('active-window');
+        });
+        updateTaskbar();
+      }},
+      { msg: 'Logging off Daniel...', progress: 70, delay: 750 },
+      { msg: 'Shutting down SSLOS...', progress: 90, delay: 800 },
+      { msg: 'SSLOS is powering down...', progress: 100, delay: 1100 }
     ];
 
-    let step = 0;
-    const totalSteps = messages.length;
+    let currentStepIdx = 0;
 
-    function nextStep() {
-      if (step >= totalSteps) {
-        // Attempt to close the tab
-        window.close();
-        // Fallback: if browser blocked close, show a message
+    function runNextShutdownStep() {
+      if (currentStepIdx >= steps.length) {
+        // Transition phase: CRT monitor power-down collapse
+        if (contentBox) contentBox.classList.add('crt-poweroff');
+        screen.classList.add('powered-off');
+
+        // Wait ~1 second before attempting to close the tab
         setTimeout(() => {
-          if (!window.closed) {
-            statusEl.textContent = 'You may now close this tab.';
-          }
-        }, 400);
+          attemptCloseTab();
+
+          // Fallback: If browser sandbox security blocks script closing, reveal the authentic retro safe-off screen
+          setTimeout(() => {
+            if (offScreen) {
+              offScreen.classList.remove('hidden');
+            }
+          }, 800);
+        }, 1000);
         return;
       }
-      statusEl.textContent = messages[step];
-      fill.style.width = `${Math.round(((step + 1) / totalSteps) * 100)}%`;
-      step++;
-      setTimeout(nextStep, step === totalSteps ? 900 : 700);
+
+      const item = steps[currentStepIdx];
+      statusEl.textContent = item.msg;
+      fill.style.width = `${item.progress}%`;
+      if (item.action) item.action();
+
+      currentStepIdx++;
+      setTimeout(runNextShutdownStep, item.delay);
     }
 
-    // Small delay before starting so the fade-in completes first
-    setTimeout(nextStep, 500);
+    // Small delay before starting so the overlay fade-in completes first
+    setTimeout(runNextShutdownStep, 400);
   });
 
   // Muhan Maesu App Refresh Toolbar Handler
